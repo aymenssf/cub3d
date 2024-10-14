@@ -6,7 +6,7 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 19:40:46 by aassaf            #+#    #+#             */
-/*   Updated: 2024/09/30 03:22:55 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/10/05 16:29:11 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,11 @@
 #include <math.h>
 # include "mlx.h"
 # include <stdio.h>
-// give me a higher resolution
 
 #define screen_width 1920
 #define screen_height 1080
 #define MAP_HEIGHT 24
-#define MAP_WIDTH 24
+#define MAP_WIDTH 240
 
 typedef struct s_data
 {
