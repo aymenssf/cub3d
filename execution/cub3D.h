@@ -6,7 +6,7 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 19:40:46 by aassaf            #+#    #+#             */
-/*   Updated: 2024/10/05 16:29:11 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/03 20:58:08 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@
 #define KEY_A 97
 #define KEY_D 100
 #define KEY_ESC 65307
-
 # include <X11/keysym.h>
 # include <X11/X.h>
 # include <sys/time.h>

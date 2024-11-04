@@ -6,12 +6,11 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 19:40:26 by aassaf            #+#    #+#             */
-/*   Updated: 2024/10/14 09:38:59 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/04 09:41:17 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3D.h"
-
+#include "../parsing/cub3d.h"
 const int wall_colors[5] = {0x000000, 0xFF0000, 0x00FF00, 0x0000FF, 0xFFFF00};
 
 int map2d[21][21] =
@@ -110,8 +109,11 @@ int keyDown(t_data *data, int keycode)
 	return data->keys[keycode];
 }
 
-void read_keys(t_data *data)
+void read_keys(myvar *var)
 {
+
+	t_data *data = var->data;
+	print_map(var->s);
     double moveStep = data->move_speed * 3.0;
     double newPosX = data->pos_x;
     double newPosY = data->pos_y;
@@ -236,12 +238,22 @@ void	calcul_wall_dist(t_data *data, t_ray *ray, double ray_dir_x, double ray_dir
 		ray->draw_end = screen_height - 1;
 
 }
+void print_map(char **s)
+{
+	int i = 0;
+	while (s[i])
+	{
+		printf("%s\n", s[i]);
+		i++;
+	}
+}
 
-void	draw_v_line(t_data *data, int x, t_ray *ray)
+void	draw_v_line(t_data *data, int x, t_ray *ray, myvar *var)
 {
 	int	y = ray->draw_start;
 	int type_wall;
-	type_wall = map2d[ray->map_y][ray->map_x];
+	print_map(var->s);
+	type_wall = var->s[ray->map_y][ray->map_x];
 	int	color = get_wall_color(type_wall);
 	while (y < ray->draw_end)
 	{
@@ -268,43 +280,50 @@ int get_2d_map_color(int wall_type)
 
 void draw_2d_map(t_data *data)
 {
-	int x, y;
-	int tile_size = MAP_WIDTH / 20;
+    int x, y;
+    int mini_size = MAP_WIDTH / 20;
+    int map_offset = 10;
 
-	y = 0;
-	while (y < 14)
-	{
-		x = 0;
-		while (x < 20)
-		{
-			int wall_type = map2d[y][x];
-			int color = get_2d_map_color(wall_type);
+    y = 0;
+    while (y < 14)
+    {
+        x = 0;
+        while (x < 20)
+        {
+            int wall_type = map2d[y][x];
+            int color = get_2d_map_color(wall_type);
 
-			int py = 0;
-			while (py < tile_size)
-			{
-				int px = 0;
-				while (px < tile_size)
-				{
-					my_mlx_pixel_put(data, x * tile_size + px, y * tile_size + py, color);
-					px++;
-				}
-				py++;
-			}
-			x++;
-		}
-		y++;
-	}
-
-	int player_x = (int)(data->pos_x * tile_size);
-	int player_y = (int)(data->pos_y * tile_size);
-	for (int py = -2; py <= 2; py++)
-	{
-		for (int px = -2; px <= 2; px++)
-		{
-			my_mlx_pixel_put(data, player_x + px, player_y + py, 0xFF0000);
-		}
-	}
+            int py = 0;
+            while (py < mini_size)
+            {
+                int px = 0;
+                while (px < mini_size)
+                {
+                    my_mlx_pixel_put(data,
+                        map_offset + x * mini_size + px,
+                        map_offset + y * mini_size + py,
+                        color);
+                    px++;
+                }
+                py++;
+            }
+            x++;
+        }
+        y++;
+    }
+    int player_x = (int)(data->pos_x * mini_size) + map_offset;
+    int player_y = (int)(data->pos_y * mini_size) + map_offset;
+    int py = -2;
+    while(py <= 2)
+    {
+        int px = -2;
+        while (px <= 2)
+        {
+            my_mlx_pixel_put(data, player_x + px, player_y + py, 0xFF0000);
+            px++;
+        }
+        py++;
+    }
 }
 
 void draw_ray(t_data *data, double ray_dir_x, double ray_dir_y, int color)
@@ -345,51 +364,56 @@ void draw_ray(t_data *data, double ray_dir_x, double ray_dir_y, int color)
 	}
 }
 
-int raycasting_loop(t_data *data)
+int raycasting_loop(myvar *var)
 {
+	t_data *data = var->data;
 	double  time;
 	double  frame_time;
 	int     x;
 	t_ray   ray;
 	double  ray_dir_x;
 	double  ray_dir_y;
-
+	print_map(var->s);
 	time = get_time();
 	frame_time = (time - data->old_time) / 1000.0;
 	data->old_time = time;
 	data->move_speed = frame_time * 2.0;
 	data->rot_speed = frame_time * 3.0;
-	read_keys(data);
-	print_player_position(data);
+	read_keys(var);
+	// print_player_position(data);
 	memset(data->addr, 0, screen_width * screen_height * (data->bits_per_pixel / 8));
-	draw_2d_map(data);
-	x = MAP_WIDTH;
+	x = 0;
 	while (x < screen_width)
 	{
 		init_ray(data, x, &ray);
 		ray_dir_x = data->dir_x + data->plane_x * ray.camera_x;
 		ray_dir_y = data->dir_y + data->plane_y * ray.camera_x;
 		calculate_dist(data, &ray, ray_dir_x, ray_dir_y);
-		if ((x - MAP_WIDTH) % 1 == 0)
-			draw_ray(data, ray_dir_x, ray_dir_y, 0x2000FF00);
 		dda_algo(&ray);
 		calcul_wall_dist(data, &ray, ray_dir_x, ray_dir_y);
-		draw_v_line(data, x, &ray);
+		draw_v_line(data, x, &ray, var);
 		x++;
 	}
 	mlx_put_image_to_window(data->mlx, data->win, data->img, 0, 0);
+	draw_2d_map(data);
+	if ((x - MAP_WIDTH) % 20 == 0)
+	draw_ray(data, ray_dir_x, ray_dir_y, 0x2000FF00);
 	mlx_do_sync(data->mlx);
 	return (0);
 }
 
-int main()
+//print map **s
+
+void execute(myvar var)
 {
-	t_data *data;
+	// printf("%d",var.player.x);
+	t_data *data = var.data;
 	data = (t_data *)malloc(sizeof(t_data));
 	if	(!data)
-		return (1);
-	data->pos_x = 1.5;
-	data->pos_y = 3.5;
+		return ;
+	// print_map(var.s);
+	data->pos_x = var.player.x + 0.5;
+	data->pos_y = var.player.y + 0.5;
 	data->dir_x = -1;
 	data->dir_y = 0;
 	data->plane_x = 0;
@@ -405,5 +429,4 @@ int main()
 	mlx_loop_hook(data->mlx, raycasting_loop, data);
 	mlx_loop(data->mlx);
 	// print_player_position(data);
-	return (0);
 }
