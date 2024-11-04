@@ -6,7 +6,7 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 19:40:26 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/04 09:41:17 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/04 10:02:31 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -411,7 +411,7 @@ void execute(myvar var)
 	data = (t_data *)malloc(sizeof(t_data));
 	if	(!data)
 		return ;
-	// print_map(var.s);
+	print_map(var.s);
 	data->pos_x = var.player.x + 0.5;
 	data->pos_y = var.player.y + 0.5;
 	data->dir_x = -1;
