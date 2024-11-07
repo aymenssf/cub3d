@@ -6,35 +6,11 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 19:40:26 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/07 23:28:12 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/07 23:42:32 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./cub3d.h"
-int map2d[21][21] =
-{
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-    {1,0,0,0,0,0,0,0,0,2,2,0,0,0,0,0,0,0,0,1},
-    {1,0,3,3,0,0,0,0,0,2,2,2,0,0,0,0,0,0,0,1},
-    {1,0,0,3,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,1},
-    {1,1,1,1,1,1,1,0,2,2,0,0,0,0,0,1,1,1,0,1},
-    {1,0,0,0,0,0,0,0,0,2,2,0,0,0,0,1,1,1,0,1},
-    {1,1,1,1,0,3,3,3,3,3,3,3,3,3,0,1,1,1,0,1},
-    {1,1,1,1,0,3,3,3,3,3,3,3,3,3,0,1,1,1,0,1},
-    {1,1,0,0,0,0,0,0,3,3,0,2,0,2,0,3,3,3,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,3,0,1},
-    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,3,0,1},
-    {1,1,0,0,0,0,0,0,3,3,0,2,0,2,3,3,3,3,3,3},
-    {1,1,1,1,0,3,3,3,3,3,0,2,0,2,3,3,3,3,3,3},
-    {1,1,1,1,0,4,4,4,4,4,0,4,0,4,4,4,4,4,4,4},
-    {1,1,1,1,0,4,4,4,4,4,0,4,0,4,4,4,4,4,4,4},
-    {1,1,1,1,0,4,4,4,4,4,0,4,0,4,4,4,4,4,4,4},
-    {1,1,1,1,0,4,4,4,4,4,0,4,0,4,4,4,4,4,4,4},
-    {1,1,1,1,0,4,4,4,4,4,0,4,0,4,4,4,4,4,4,4},
-    {1,1,1,1,0,4,4,4,4,4,0,4,0,4,4,4,4,4,4,4},
-    {1,1,1,1,0,4,4,4,4,4,0,4,0,4,4,4,4,4,4,4},
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
-};
 
 double get_time()
 {
@@ -316,13 +292,13 @@ void draw_v_line(t_data *data, int x, t_ray *ray, myvar *var)
     if (ray->map_y >= 0 && ray->map_y < var->data->map_rows && ray->map_x >= 0 && ray->map_x < var->data->map_cols && (size_t)ray->map_x < ft_strlen(var->s[ray->map_y]))
 	{
         if (ray->wall_orientation == 0)
-            color = 0xFF0000; // South wall - Red
+            color = 0xFF0000; // S - Red
         else if (ray->wall_orientation == 1)
-            color = 0x00FF00; // North wall - Green
+            color = 0x00FF00; // N - Green
         else if (ray->wall_orientation == 2)
-            color = 0x0000FF; // West wall - Blue
+            color = 0x0000FF; // W - Blue
         else if (ray->wall_orientation == 3)
-            color = 0xFFFF00; // East wall - Yellow
+            color = 0xFFFF00; // E - Yellow
         else
             color = 0xFFFFFF; // Default - White
 
@@ -339,13 +315,13 @@ int get_2d_map_color(int wall_type, int orientation)
     if (wall_type == 1)
     {
         if (orientation == 0)
-            return 0xFF0000;      // S - Red
-        else if (orientation == 1)
             return 0x00FF00;      // N - Green
+        else if (orientation == 1)
+            return 0xFF0000;      // S - Red
         else if (orientation == 2)
-            return 0x0000FF;      // W- Blue
-        else if (orientation == 3)
             return 0xFFFF00;      // E- Yellow
+        else if (orientation == 3)
+            return 0x0000FF;      // W- Blue
         return 0xFFFFFF;          // default- White
     }
     return 0x000000;             // Ground - Black
@@ -408,7 +384,7 @@ void draw_2d_map(myvar *var)
         int py = -2;
         while (py <= 2)
         {
-            my_mlx_pixel_put(data, player_x + px, player_y + py, 0xFF0000);
+            my_mlx_pixel_put(data, map_offset + player_x + px, map_offset + player_y + py, 0xFF0000);
             py++;
         }
         px++;
