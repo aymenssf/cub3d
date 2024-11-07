@@ -1,24 +1,24 @@
-NAME	= cub3D
-CC	= cc
-SRC	= main.c
 
+CC := cc
 
-%.o: %.c
-	$(CC) -Wall -Wextra -Werror -I/usr/include -Imlx_linux -O3 -c $< -o $@
+CFLAGS = -Wall -Wextra -Werror -fsanitize=address -g3
 
+NAME := cub3D
 
-OBJ 	= $(SRC:.c=.o)
-all:	$(NAME)
+SRC = main.c helper_functions/helper_functions.c  helper_functions/quee_functions_helper.c  helper_functions/helper_functions1.c  helper_functions/helper_functions2.c  helper_functions/helper_Textures.c  helper_functions/helper_functions3.c helper_functions/helper_functions4.c \
+		execution.c
 
+OBJ := $(SRC:.c=.o)
+
+all: $(NAME)
 
 $(NAME): $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) -Lmlx_linux mlx_linux/libmlx.a -lXext -lX11 -lm -lz -g3 -fsanitize=address -o $(NAME)
+	$(CC) $(CFLAGS) -o $(NAME) $(OBJ) libft/libft.a -Lmlx_linux ./mlx_linux/libmlx.a -lXext -lX11 -lm -lz
 
 clean:
-	rm -f $(OBJ)
+	rm -rf $(OBJ)
 
-fclean:	clean
-	rm -f $(NAME)
+fclean:
+	rm -rf $(NAME) $(OBJ)
 
-
-re:	fclean all
+re: fclean all
