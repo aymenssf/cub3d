@@ -43,6 +43,7 @@ int	check_extension(char *str, char *s)
 {
 	int	i;
 
+
 	i = ft_strlen(str) - 4;
 	if (!ft_strncmp(str + i, s, i))
 		return (1);
@@ -59,9 +60,9 @@ void	init(myvar *var, int argc, char **argv)
 	}
 	else
 	{
-	// 	var->data = (t_data *)malloc(sizeof(t_data));
-	// 	if	(!(var->data))
-	// 		return ;
+		var->data = (t_data *)malloc(sizeof(t_data));
+		if	(!(var->data))
+			return ;
 		var->s = NULL;
 		var->list = NULL;
 		var->str = NULL;
@@ -83,19 +84,24 @@ void	init(myvar *var, int argc, char **argv)
 
 int	main(int argc, char **argv)
 {
-	myvar	var;
-
-	init(&var, argc, argv);
-	if (!var.fd)
+	myvar	*var = malloc(sizeof(myvar));
+	// print textures
+	init(var, argc, argv);
+	if (!var->fd)
 		return (-1);
-	if (parse_map(&var) || find_direction(&var.player, var.s)
-		|| check_map2(var.s))
+	if (parse_map(var) || find_direction(&var->player, var->s)
+		|| check_map2(var->s))
 	{
 		printf("error ");
-		return (garbage_collector(&var.list, free), 1);
+		return (garbage_collector(&var->list, free), 1);
 	}
-	execute(var);
+	else
+	{
+		calcul_map_dimens(var);
+		detect_direc_player(var);
+		execute(var);
+	}
 
-	return (garbage_collector(&var.list, free), 1);
+	return (garbage_collector(&var->list, free), 1);
 
 }

@@ -12,14 +12,14 @@
 # endif
 
 # define PIXEL 128
-#define KEY_LEFT 65361
+#define KEY_RIGHT 65361
 #define KEY_UP 65362
-#define KEY_RIGHT 65363
+#define KEY_LEFT  65363
 #define KEY_DOWN 65364
 #define KEY_W 119
 #define KEY_S 115
-#define KEY_A 97
-#define KEY_D 100
+#define KEY_D 97
+#define KEY_A  100
 #define KEY_ESC 65307
 # include <X11/keysym.h>
 # include <X11/X.h>
@@ -88,6 +88,8 @@ typedef struct s_data
 	double move_speed;
 	double old_time;
 	double rot_speed;
+	int map_rows;
+	int map_cols;
 	int keys[65536];
 } t_data;
 
@@ -123,6 +125,7 @@ typedef struct s_ray
 	int		side;
 	int		line_height;
 	int		draw_start;
+	int	wall_orientation;
 	int		draw_end;
 } t_ray;
 
@@ -162,9 +165,11 @@ int					check_ss(char *line, listt **node);
 void				add_nodee(char *name, list **listo, listt **liste);
 int					check_s(char **s, list **list, myvar *var);
 int					process_s(char **s, char **ss, listt **node);
+void detect_direc_player(myvar *var);
 void	parse_s(char **s, int count);
 int check_extension(char *str ,char *s);
-void execute(myvar var);
+void execute(myvar *var);
+void calcul_map_dimens(myvar *var);
 void print_map(char **s);
 
 #endif

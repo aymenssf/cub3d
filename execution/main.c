@@ -6,13 +6,12 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 19:40:26 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/04 10:02:31 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/07 03:21:51 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../parsing/cub3d.h"
-const int wall_colors[5] = {0x000000, 0xFF0000, 0x00FF00, 0x0000FF, 0xFFFF00};
-
+const int wall_colors[5] = {0x000000, 0x00FF00, 0xFF0000, 0x0000FF, 0xFFFF00};
 int map2d[21][21] =
 {
     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
@@ -38,7 +37,6 @@ int map2d[21][21] =
     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
 };
 
-
 double get_time()
 {
 	struct timeval tv;
@@ -46,8 +44,9 @@ double get_time()
 	return (double)tv.tv_sec * 1000.0 + (double)tv.tv_usec / 1000.0;
 }
 
-int is_wall(int x, int y)
+int is_wall(myvar *var, int x, int y)
 {
+	(void)var;
 	if (x < 0 || x >= 20 || y < 0 || y >= 14)
 		return (1);
 	return (map2d[y][x] != 0);
@@ -61,12 +60,12 @@ int get_wall_color(int type_wall)
 }
 
 
-int is_valid_position(double x, double y)
+int is_valid_position(myvar *var, double x, double y)
 {
     int map_x = (int)x;
     int map_y = (int)y;
 
-    return !is_wall(map_x, map_y);
+    return !is_wall(var, map_x, map_y);
 }
 
 
@@ -113,8 +112,9 @@ void read_keys(myvar *var)
 {
 
 	t_data *data = var->data;
-	print_map(var->s);
+	// print_map(var->s);
     double moveStep = data->move_speed * 3.0;
+	double strafeStep = data->move_speed * 3.0;
     double newPosX = data->pos_x;
     double newPosY = data->pos_y;
 
@@ -128,11 +128,21 @@ void read_keys(myvar *var)
         newPosX -= data->dir_x * moveStep;
         newPosY -= data->dir_y * moveStep;
     }
-    if (is_valid_position(newPosX, data->pos_y))
+	if(keyDown(data, KEY_D))
+	{
+		newPosX -= data->plane_x * strafeStep;
+		newPosY -= data->plane_y * strafeStep;
+	}
+	if(keyDown(data, KEY_A))
+	{
+		newPosX += data->plane_x * strafeStep;
+		newPosY += data->plane_y * strafeStep;
+	}
+    if (is_valid_position(var, newPosX, data->pos_y))
         data->pos_x = newPosX;
-    if (is_valid_position(data->pos_x, newPosY))
+    if (is_valid_position(var, data->pos_x, newPosY))
         data->pos_y = newPosY;
-    if (keyDown(data, KEY_RIGHT) || keyDown(data, KEY_D))
+    if (keyDown(data, KEY_RIGHT))
     {
         double oldDirX = data->dir_x;
         data->dir_x = data->dir_x * cos(-data->rot_speed) - data->dir_y * sin(-data->rot_speed);
@@ -141,7 +151,7 @@ void read_keys(myvar *var)
         data->plane_x = data->plane_x * cos(-data->rot_speed) - data->plane_y * sin(-data->rot_speed);
         data->plane_y = oldPlaneX * sin(-data->rot_speed) + data->plane_y * cos(-data->rot_speed);
     }
-    if (keyDown(data, KEY_LEFT) || keyDown(data, KEY_A))
+    if (keyDown(data, KEY_LEFT))
     {
         double oldDirX = data->dir_x;
         data->dir_x = data->dir_x * cos(data->rot_speed) - data->dir_y * sin(data->rot_speed);
@@ -200,25 +210,33 @@ void	calculate_dist(t_data *data, t_ray *ray, double ray_dir_x, double ray_dir_y
 	}
 }
 
-void	dda_algo(t_ray *ray)
+void dda_algo(t_ray *ray, myvar *var)
 {
-	while (!ray->hit)
-	{
-		if (ray->side_dist_x < ray->side_dist_y)
-		{
-			ray->side_dist_x += ray->delta_dist_x;
-			ray->map_x += ray->step_x;
-			ray->side = 0;
-		}
-		else
-		{
-			ray->side_dist_y += ray->delta_dist_y;
-			ray->map_y += ray->step_y;
-			ray->side = 1;
-		}
-		if (is_wall(ray->map_x, ray->map_y))
-			ray->hit = 1;
-	}
+    while (!ray->hit)
+    {
+        if (ray->side_dist_x < ray->side_dist_y)
+        {
+            ray->side_dist_x += ray->delta_dist_x;
+            ray->map_x += ray->step_x;
+            ray->side = 0;
+            if (ray->step_x == -1)
+                ray->wall_orientation = 2; // W
+            else
+                ray->wall_orientation = 3; // E
+        }
+        else
+        {
+            ray->side_dist_y += ray->delta_dist_y;
+            ray->map_y += ray->step_y;
+            ray->side = 1;
+            if (ray->step_y == -1)
+                ray->wall_orientation = 1; // N
+            else
+                ray->wall_orientation = 0; // S
+        }
+        if (is_wall(var, ray->map_x, ray->map_y))
+            ray->hit = 1;
+    }
 }
 
 void	calcul_wall_dist(t_data *data, t_ray *ray, double ray_dir_x, double ray_dir_y)
@@ -248,85 +266,172 @@ void print_map(char **s)
 	}
 }
 
-void	draw_v_line(t_data *data, int x, t_ray *ray, myvar *var)
+void detect_direc_player(myvar *var)
 {
-	int	y = ray->draw_start;
-	int type_wall;
-	print_map(var->s);
-	type_wall = var->s[ray->map_y][ray->map_x];
-	int	color = get_wall_color(type_wall);
-	while (y < ray->draw_end)
+    int i = 0;
+    int j = 0;
+    while (var->s[i])
+    {
+        j = 0;
+        while (var->s[i][j])
+        {
+            if (var->s[i][j] == 'N' || var->s[i][j] == 'S' || var->s[i][j] == 'E' || var->s[i][j] == 'W')
+            {
+                var->player.x = j;
+                var->player.y = i;
+                if (var->s[i][j] == 'N')
+                {
+                	printf("Found player at (%d,  %d): %c\n", i, j, var->s[i][j]);
+                    var->data->dir_x = 0;
+                    var->data->dir_y = -1;
+                    var->data->plane_x = 0.66;
+                    var->data->plane_y = 0;
+                }
+                else if (var->s[i][j] == 'S')
+                {
+                    var->data->dir_x = 0;
+                    var->data->dir_y = 1;
+                    var->data->plane_x = -0.66;
+                    var->data->plane_y = 0;
+                }
+                else if (var->s[i][j] == 'E')
+                {
+                    var->data->dir_x = 1;
+                    var->data->dir_y = 0;
+                    var->data->plane_x = 0;
+                    var->data->plane_y = 0.66;
+                }
+                else if (var->s[i][j] == 'W')
+                {
+                    var->data->dir_x = -1;
+                    var->data->dir_y = 0;
+                    var->data->plane_x = 0;
+                    var->data->plane_y = -0.66;
+                }
+                var->s[i][j] = '0';
+                return;
+            }
+            j++;
+        }
+        i++;
+    }
+}
+
+void draw_v_line(t_data *data, int x, t_ray *ray, myvar *var)
+{
+    int y = ray->draw_start;
+    int color;
+
+    if (ray->map_y >= 0 && ray->map_y < var->data->map_rows && ray->map_x >= 0 && ray->map_x < var->data->map_cols && (size_t)ray->map_x < ft_strlen(var->s[ray->map_y]))
 	{
-		my_mlx_pixel_put(data, x, y, color);
-		y++;
-	}
+        if (ray->wall_orientation == 0)
+            color = 0xFF0000; // South wall - Red
+        else if (ray->wall_orientation == 1)
+            color = 0x00FF00; // North wall - Green
+        else if (ray->wall_orientation == 2)
+            color = 0x0000FF; // West wall - Blue
+        else if (ray->wall_orientation == 3)
+            color = 0xFFFF00; // East wall - Yellow
+        else
+            color = 0xFFFFFF; // Default - White
+
+        while (y < ray->draw_end)
+		{
+            my_mlx_pixel_put(data, x, y, color);
+            y++;
+        }
+    }
 }
 
-void print_player_position(t_data *data)
+// void print_player_position(t_data *data)
+// {
+//     printf("Player position: (%f, %f)\n", data->pos_x, data->pos_y);
+//     printf("Player map position: (%d, %d)\n", (int)data->pos_x, (int)data->pos_y);
+//     printf("Is wall at player position: %d\n", is_wall((int)data->pos_x, (int)data->pos_y));
+// }
+
+int get_2d_map_color(int wall_type, int orientation)
 {
-    printf("Player position: (%f, %f)\n", data->pos_x, data->pos_y);
-    printf("Player map position: (%d, %d)\n", (int)data->pos_x, (int)data->pos_y);
-    printf("Is wall at player position: %d\n", is_wall((int)data->pos_x, (int)data->pos_y));
+    if (wall_type == 1)
+    {
+        if (orientation == 0)
+            return 0xFF0000;      // S - Red
+        else if (orientation == 1)
+            return 0x00FF00;      // N - Green
+        else if (orientation == 2)
+            return 0x0000FF;      // W- Blue
+        else if (orientation == 3)
+            return 0xFFFF00;      // E- Yellow
+        return 0xFFFFFF;          // default- White
+    }
+    return 0x000000;             // Ground - Black
 }
 
-int get_2d_map_color(int wall_type)
+void draw_2d_map(myvar *var)
 {
-    const int map_colors[4] = {0x000000, 0xFFFFFF, 0xAAAAAA, 0x555555};
-
-    if (wall_type >= 0 && wall_type <= 3)
-        return map_colors[wall_type];
-    return 0xFF00FF;
-}
-
-void draw_2d_map(t_data *data)
-{
+    t_data *data = var->data;
     int x, y;
     int mini_size = MAP_WIDTH / 20;
     int map_offset = 10;
-
     y = 0;
-    while (y < 14)
+    while (y < var->data->map_rows)
     {
         x = 0;
-        while (x < 20)
+        while (x < var->data->map_cols)
         {
-            int wall_type = map2d[y][x];
-            int color = get_2d_map_color(wall_type);
-
-            int py = 0;
-            while (py < mini_size)
+            if ((size_t)x < ft_strlen(var->s[y]))
             {
-                int px = 0;
-                while (px < mini_size)
+                int wall_type = var->s[y][x] - '0';
+                int orientation = -1;
+                if (wall_type == 1)
                 {
-                    my_mlx_pixel_put(data,
-                        map_offset + x * mini_size + px,
-                        map_offset + y * mini_size + py,
-                        color);
-                    px++;
+                    if (y > 0 && (size_t)x < ft_strlen(var->s[y-1]) && var->s[y-1][x] == '0')
+                        orientation = 1;
+                    else if (y < var->data->map_rows - 1 && (size_t)x < ft_strlen(var->s[y+1]) && var->s[y+1][x] == '0')
+                        orientation = 0;
+                    else if (x > 0 && var->s[y][x-1] == '0')
+                        orientation = 2;
+                    else if (x < var->data->map_cols - 1 && var->s[y][x+1] == '0')
+                        orientation = 3;
                 }
-                py++;
+
+                int color = get_2d_map_color(wall_type, orientation);
+
+                int py = 0;
+                while (py < mini_size)
+                {
+                    int px = 0;
+                    while (px < mini_size)
+                    {
+                        my_mlx_pixel_put(data,
+                                        map_offset + x * mini_size + px,
+                                        map_offset + y * mini_size + py,
+                                        color);
+                        px++;
+                    }
+                    py++;
+                }
             }
             x++;
         }
         y++;
     }
-    int player_x = (int)(data->pos_x * mini_size) + map_offset;
-    int player_y = (int)(data->pos_y * mini_size) + map_offset;
-    int py = -2;
-    while(py <= 2)
+    int player_x = (int)(data->pos_x * mini_size);
+    int player_y = (int)(data->pos_y * mini_size);
+    int px = -2;
+    while (px <= 2)
     {
-        int px = -2;
-        while (px <= 2)
+        int py = -2;
+        while (py <= 2)
         {
             my_mlx_pixel_put(data, player_x + px, player_y + py, 0xFF0000);
-            px++;
+            py++;
         }
-        py++;
+        px++;
     }
 }
 
-void draw_ray(t_data *data, double ray_dir_x, double ray_dir_y, int color)
+void draw_ray(myvar *var, t_data *data, double ray_dir_x, double ray_dir_y, int color)
 {
 	int tile_size = MAP_WIDTH / 20;
 	double ray_pos_x = data->pos_x;
@@ -359,11 +464,24 @@ void draw_ray(t_data *data, double ray_dir_x, double ray_dir_y, int color)
 			side_dist_y += delta_dist_y;
 			ray_pos_y += step_y;
 		}
-		if (is_wall((int)ray_pos_x, (int)ray_pos_y))
+		if (is_wall(var, (int)ray_pos_x, (int)ray_pos_y))
 			hit = 1;
 	}
 }
 
+void calcul_map_dimens(myvar *var)
+{
+	int row = 0;
+	int col = 0;
+
+	while (var->s[row])
+		row++;
+	if(row > 0)
+		col = ft_strlen(var->s[0]);
+	var->data->map_rows = row;
+	var->data->map_cols = col;
+	printf("rows %d cols %d\n",var->data->map_rows,var->data->map_cols);
+}
 int raycasting_loop(myvar *var)
 {
 	t_data *data = var->data;
@@ -373,7 +491,6 @@ int raycasting_loop(myvar *var)
 	t_ray   ray;
 	double  ray_dir_x;
 	double  ray_dir_y;
-	print_map(var->s);
 	time = get_time();
 	frame_time = (time - data->old_time) / 1000.0;
 	data->old_time = time;
@@ -389,44 +506,34 @@ int raycasting_loop(myvar *var)
 		ray_dir_x = data->dir_x + data->plane_x * ray.camera_x;
 		ray_dir_y = data->dir_y + data->plane_y * ray.camera_x;
 		calculate_dist(data, &ray, ray_dir_x, ray_dir_y);
-		dda_algo(&ray);
+		dda_algo(&ray, var);
 		calcul_wall_dist(data, &ray, ray_dir_x, ray_dir_y);
+		// var->s[var->player.x][var->player.y] = '0';
 		draw_v_line(data, x, &ray, var);
 		x++;
 	}
 	mlx_put_image_to_window(data->mlx, data->win, data->img, 0, 0);
-	draw_2d_map(data);
+	draw_2d_map(var);
 	if ((x - MAP_WIDTH) % 20 == 0)
-	draw_ray(data, ray_dir_x, ray_dir_y, 0x2000FF00);
+		draw_ray(var, data, ray_dir_x, ray_dir_y, 0x2000FF00);
 	mlx_do_sync(data->mlx);
 	return (0);
 }
 
-//print map **s
-
-void execute(myvar var)
+void execute(myvar *var)
 {
-	// printf("%d",var.player.x);
-	t_data *data = var.data;
-	data = (t_data *)malloc(sizeof(t_data));
-	if	(!data)
-		return ;
-	print_map(var.s);
-	data->pos_x = var.player.x + 0.5;
-	data->pos_y = var.player.y + 0.5;
-	data->dir_x = -1;
-	data->dir_y = 0;
-	data->plane_x = 0;
-	data->plane_y = 0.66;
+	t_data *data = var->data;
+	data->pos_x = var->player.x + 0.5;
+	data->pos_y = var->player.y + 0.5;
 	memset(data->keys, 0, sizeof(data->keys));
 	data->mlx = mlx_init();
-	data->win = mlx_new_window(data->mlx, screen_width, screen_height, "Raycaster");
+	data->win = mlx_new_window(data->mlx, screen_width, screen_height, "CUB3D");
 	data->img = mlx_new_image(data->mlx, screen_width, screen_height);
 	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel, &data->line_length, &data->endian);
 	mlx_hook(data->win, 2, 1L<<0, key_press, data);
 	mlx_hook(data->win, 3, 1L<<1, key_release, data);
 	mlx_hook(data->win, 17, 0, close_window, data);
-	mlx_loop_hook(data->mlx, raycasting_loop, data);
+	mlx_loop_hook(data->mlx, raycasting_loop, var);
 	mlx_loop(data->mlx);
 	// print_player_position(data);
 }
