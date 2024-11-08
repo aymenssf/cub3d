@@ -6,7 +6,7 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 11:47:45 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/08 11:58:14 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/08 12:37:59 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@
 # include <string.h>
 # include <stdarg.h>
 #include <math.h>
-# include <mlx.h>
+# include "mlx.h"
 
 #define screen_width 1920
 #define screen_height 1080
@@ -107,7 +107,7 @@ typedef struct s_data
 
 typedef struct myvar
 {
-	
+
 	t_data			*data;
 	listt			*list;
 	my_map			map;
