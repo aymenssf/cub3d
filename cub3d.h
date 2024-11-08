@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cub3d.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/08 11:47:45 by aassaf            #+#    #+#             */
+/*   Updated: 2024/11/08 11:58:14 by aassaf           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef CUB3D_H
 # define CUB3D_H
 
@@ -21,13 +33,13 @@
 #define KEY_D 97
 #define KEY_A  100
 #define KEY_ESC 65307
-# include <X11/keysym.h>
-# include <X11/X.h>
+// # include <X11/keysym.h>
+// # include <X11/X.h>
 # include <sys/time.h>
 # include <string.h>
 # include <stdarg.h>
 #include <math.h>
-# include "mlx.h"
+# include <mlx.h>
 
 #define screen_width 1920
 #define screen_height 1080
@@ -95,12 +107,13 @@ typedef struct s_data
 
 typedef struct myvar
 {
+	
 	t_data			*data;
 	listt			*list;
 	my_map			map;
 	char			**s;
 	int				count;
-
+	int				map_offset;
 	int				i;
 	int				fd;
 	char			*str;
@@ -170,6 +183,7 @@ void	parse_s(char **s, int count);
 int check_extension(char *str ,char *s);
 void execute(myvar *var);
 void calcul_map_dimens(myvar *var);
-void print_map(char **s);
+void my_mlx_pixel_put(t_data *data, int x, int y, int color);
+void	draw_2d_map(myvar *var);
 
 #endif

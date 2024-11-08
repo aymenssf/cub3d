@@ -6,7 +6,7 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 19:40:26 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/08 00:50:40 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/08 11:48:32 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -333,110 +333,7 @@ void draw_v_line(t_data *data, int x, t_ray *ray, myvar *var)
     }
 }
 
-int get_2d_map_color(int wall_type, int orientation)
-{
-    if (wall_type == 1)
-    {
-        if (orientation == 0)
-            return 0x00FF00;      // N - Green
-        else if (orientation == 1)
-            return 0xFF0000;      // S - Red
-        else if (orientation == 2)
-            return 0xFFFF00;      // E- Yellow
-        else if (orientation == 3)
-            return 0x0000FF;      // W- Blue
-        return 0xFFFFFF;          // default- White
-    }
-    return 0x000000;             // Ground - Black
-}
 
-static int get_wall_orientation(myvar *var, int x, int y)
-{
-    if (y > 0 && (size_t)x < ft_strlen(var->s[y-1]) && var->s[y-1][x] == '0')
-        return 1;
-    if (y < var->data->map_rows - 1 && (size_t)x < ft_strlen(var->s[y+1]) && var->s[y+1][x] == '0')
-        return 0;
-    if (x > 0 && var->s[y][x-1] == '0')
-        return 2;
-    if (x < var->data->map_cols - 1 && var->s[y][x+1] == '0')
-        return 3;
-    return -1;
-}
-
-static void draw_map_tile(myvar *var, int x, int y, int mini_size, int map_offset)
-{
-    int wall_type;
-    int orientation;
-    int color;
-	int py;
-	int px;
-
-    if ((size_t)x >= ft_strlen(var->s[y]))
-		return;
-	wall_type = var->s[y][x] - '0';
-	if (wall_type == 1)
-		orientation = get_wall_orientation(var, x, y);
-	else
-		orientation = -1;
-	color = get_2d_map_color(wall_type, orientation);
-
-	py = 0;
-	while (py < mini_size)
-	{
-		px = 0;
-		while (px < mini_size)
-		{
-			my_mlx_pixel_put(var->data,
-			map_offset + x * mini_size + px, map_offset + y * mini_size + py, color);
-			px++;
-		}
-		py++;
-	}
-}
-
-static void draw_player_position(t_data *data, int mini_size, int map_offset)
-{
-    int player_x = (int)(data->pos_x * mini_size);
-    int player_y = (int)(data->pos_y * mini_size);
-
-	int px = -2;
-	while (px <= 2) {
-		int py = -2;
-		while (py <= 2) {
-			my_mlx_pixel_put(data,
-							map_offset + player_x + px,
-							map_offset + player_y + py,
-							0xFF0000);
-			py++;
-		}
-		px++;
-	}
-}
-
-void draw_2d_map(myvar *var)
-{
-    int mini_size;
-    int map_offset;
-
-	mini_size = MAP_WIDTH / 20;
-	map_offset = 10;
-	int y;
-	int x;
-
-	y = 0;
-
-	while (y < var->data->map_rows)
-	{
-		x = 0;
-		while (x < var->data->map_cols)
-		{
-			draw_map_tile(var, x, y, mini_size, map_offset);
-			x++;
-		}
-		y++;
-	}
-    draw_player_position(var->data, mini_size, map_offset);
-}
 
 static void calculate_step_direction(double ray_dir_x, double ray_dir_y, int *step_x, int *step_y)
 {
