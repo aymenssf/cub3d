@@ -1,103 +1,104 @@
 #include "../cub3d.h"
 
-void store_to_textures(myvar *var , char *s)
+char	*some(int *i, char *line)
 {
-	int i = 0;
-	if(var->textures[3]!= NULL)
-		return ;
-
-	while (var->textures[i])
-		i++;
-	
-	var->textures[i] = s;
+	if (*i == 0)
+		return (NULL);
+	return (ft_strdup(line));
 }
 
-int	check_texture(char *s, list **list, myvar *var )
+char	*get_next_line(int fd)
 {
-	char	**ss;
+	static char	buffer[BUFFER_SIZE];
+	char		line[70000];
+	static int	buffer_readed;
+	static int	buffer_pos;
+	int			i;
 
-	ss = ft_split(s, ' ');
-	add_to_listt(ss, &(var->list));
-	mylist(ss, &(var->list));
-	if (count(ss) == 2)
+	i = 0;
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
+	while (1)
 	{
-		if (open(ss[1], O_RDONLY) == -1 || !(check_extension(ss[1], ".xpm")))
-			return (1);
-
-		store_to_textures(var,ss[1]);
-		add_node_list(ss[0], list, &var->count, &(var->list));
+		if (buffer_pos >= buffer_readed)
+		{
+			buffer_readed = read(fd, buffer, BUFFER_SIZE);
+			buffer_pos = 0;
+			if (buffer_readed <= 0)
+				break ;
+		}
+		line[i++] = buffer[buffer_pos++];
+		if (line[i - 1] == '\n')
+			break ;
 	}
-	return (0);
-}
-void	check_texture_floor(char *c, char *s, myvar *var, list **listt)
-{
-		if ((!ft_strncmp(c, "NO", 2)) || (!ft_strncmp(c, "SO", 2)) || !ft_strncmp(c,
-			"WE", 2) || !ft_strncmp(c, "EA", 2))
-				check_texture(s, listt, var );
-	else
-		check_floor(s, listt, var);
+	line[i] = '\0';
+	return (some(&i, line));
 }
 
-int	check_sfloor(char *s)
+int	find_direction(player *player, char **mini_map)
 {
 	int	i;
+	int	j;
+	int	flag;
 
+	flag = 0;
 	i = -1;
-	while (s[++i])
+	while (mini_map[++i])
 	{
-		if ((s[i] == ',' && s[i + 1] == s[i]) || s[0] == ',')
-			return (1);
+		j = -1;
+		while (mini_map[i][++j])
+		{
+			if (ft_strchr("NESW", mini_map[i][j]))
+			{
+				flag++;
+				player->x = i;
+				player->y = j;
+			}
+			else if (mini_map[i][j] != ' ' && mini_map[i][j] != '0'
+					&& mini_map[i][j] != '1')
+				return (1);
+		}
 	}
+	if (flag != 1)
+		return (1);
 	return (0);
 }
 
-int	create_rgb( int r, int g, int b)
+void	parse_ss(char **s, int *check, int *countt, int *i)
 {
-	return ( r << 16 | g << 8 | b);
-}
-
-
-int	check_floor(char *s, list **listo, myvar *var)
-{
-	char	*sss;
-	int		i;
-	char	**ss;
-
-	if (process_s(&s, &sss, &(var->list)))
-		return (1);
-
-	
-	i = -1;
-	ss = ft_split(s, ',');
-	add_to_listt(ss, &(var->list));
-	mylist(ss, &(var->list));
-	if (count(ss) != 3 || s[ft_strlen(s) - 1] == ',' || (check_sfloor(s)))
-		return (1);
-	while (ss[++i])
+	*i = 0;
+	if ((**s != '\n' && **s != ' ') && *check == 0)
+		*check = 1;
+	else if (**s == '\n' && *check == 1)
 	{
-		if (check_ss(ss[i], &(var->list)) || ft_atoi(ss[i]) < 0 || ft_atoi(ss[i]) > 255)
-			return (1);
+		*check = 0;
+		(*countt)++;
 	}
-	
-	if(sss[0] == 'F')
-		var->floor = create_rgb(ft_atoi(ss[0]),ft_atoi(ss[1]),ft_atoi(ss[2]));
-	else 
-		var->cel = create_rgb(ft_atoi(ss[0]),ft_atoi(ss[1]),ft_atoi(ss[2]));
-
-	add_node_list(sss, listo, &var->count, &(var->list));
-	return (0);
 }
 
-int	process_s(char **s, char **ss, listt **node)
+void	parse_s(char **s, int count)
 {
-	*s = ft_strtrim(*s, " ");
-	mylist(*s, node);
-	*ss = *s;
-	if (!((**s == 'C' || **s == 'F') && s[0][1] == ' '))
-		return (1);
-	(*s)++;
-	*s = ft_strtrim(*s, " ");
-	mylist(*s, node);
-	(*ss)[1] = 0;
-	return (0);
+	int	check;
+	int	countt;
+	int	i;
+
+	check = 0;
+	countt = 0;
+	while (**s)
+	{
+		parse_ss(s, &check, &countt, &i);
+		if (countt == count)
+			break ;
+		(*s)++;
+	}
+	while (s[0][i])
+		if (s[0][i] == '\n' || s[0][i] == ' ')
+			i++;
+	else
+		break ;
+	if (s[0][i - 1] == ' ')
+		i--;
+	while (s[0][i] == ' '
+			&& i--);
+	*s += (i);
 }
