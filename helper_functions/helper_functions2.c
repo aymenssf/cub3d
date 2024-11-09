@@ -11,6 +11,7 @@ void	store_to_textures(myvar *var, char *s)
 		i++;
 	var->textures[i] = s;
 }
+
 int	check_len(char **s)
 {
 	int	i;
@@ -64,9 +65,11 @@ void	add_nodee(char *name, list **listo, listt **liste)
 	list	*test;
 	list	*head;
 
+	test = malloc(sizeof(list));
+	if (!test)
+		return ;
 	if (!(*listo))
 	{
-		test = malloc(sizeof(list));
 		mylist(test, liste);
 		test->name = name;
 		test->next = NULL;
@@ -78,7 +81,6 @@ void	add_nodee(char *name, list **listo, listt **liste)
 		head = *listo;
 		while (head->next)
 			head = head->next;
-		test = malloc(sizeof(list));
 		mylist(test, liste);
 		test->name = name;
 		test->next = NULL;
