@@ -1,17 +1,15 @@
 #include "../cub3d.h"
 
-void	do_something(player p, char **s, queue **queue, listt **node)
+void	store_to_textures(myvar *var, char *s)
 {
-	if (s[p.x][p.y] && s[p.x][p.y] == '0')
-		add_quee(queue, p.x, p.y, node);
-	if (s[p.x - 1][p.y] && s[p.x - 1][p.y] == '0')
-		add_quee(queue, p.x - 1, p.y, node);
-	if (s[p.x][p.y + 1] && s[p.x][p.y + 1] == '0')
-		add_quee(queue, p.x, p.y + 1, node);
-	if (s[p.x + 1][p.y] && s[p.x + 1][p.y] == '0')
-		add_quee(queue, p.x + 1, p.y, node);
-	if (s[p.x][p.y + 1] && s[p.x][p.y - 1] == '0')
-		add_quee(queue, p.x, p.y - 1, node);
+	int	i;
+
+	i = 0;
+	if (var->textures[3] != NULL)
+		return ;
+	while (var->textures[i])
+		i++;
+	var->textures[i] = s;
 }
 
 int	check_len(char **s)
@@ -67,9 +65,11 @@ void	add_nodee(char *name, list **listo, listt **liste)
 	list	*test;
 	list	*head;
 
+	test = malloc(sizeof(list));
+	if (!test)
+		return ;
 	if (!(*listo))
 	{
-		test = malloc(sizeof(list));
 		mylist(test, liste);
 		test->name = name;
 		test->next = NULL;
@@ -81,7 +81,6 @@ void	add_nodee(char *name, list **listo, listt **liste)
 		head = *listo;
 		while (head->next)
 			head = head->next;
-		test = malloc(sizeof(list));
 		mylist(test, liste);
 		test->name = name;
 		test->next = NULL;
