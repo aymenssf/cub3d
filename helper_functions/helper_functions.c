@@ -48,16 +48,15 @@ int	find_direction(player *player, char **mini_map)
 		j = -1;
 		while (mini_map[i][++j])
 		{
-			if (mini_map[i][j] == 'N' || mini_map[i][j] == 'E'
-				|| mini_map[i][j] == 'S' || mini_map[i][j] == 'W')
-				{
-					flag++;
-					player->x =i;
-					player->y=j;
-				}
+			if (ft_strchr("NESW", mini_map[i][j]))
+			{
+				flag++;
+				player->x = i;
+				player->y = j;
+			}
 			else if (mini_map[i][j] != ' ' && mini_map[i][j] != '0'
 					&& mini_map[i][j] != '1')
-				return (printf("there is an eror on player"), 1);
+				return (1);
 		}
 	}
 	if (flag != 1)
@@ -85,8 +84,6 @@ void	parse_s(char **s, int count)
 
 	check = 0;
 	countt = 0;
-
-	
 	while (**s)
 	{
 		parse_ss(s, &check, &countt, &i);
@@ -94,21 +91,14 @@ void	parse_s(char **s, int count)
 			break ;
 		(*s)++;
 	}
-
-
 	while (s[0][i])
-	{
 		if (s[0][i] == '\n' || s[0][i] == ' ')
 			i++;
-		else
-			break ;
-	}
-	
+	else
+		break ;
 	if (s[0][i - 1] == ' ')
 		i--;
-
-	while (s[0][i] == ' ' && i--);
-
+	while (s[0][i] == ' '
+			&& i--);
 	*s += (i);
-
 }

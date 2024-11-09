@@ -163,9 +163,6 @@ typedef struct s_ray
 
 char				*get_next_line(int fd);
 int					find_direction(player *player, char **mini_map);
-queue				*add_node(int x, int y);
-void	add_quee(queue **queu, int x, int y, listt **node);
-void				dequee(queue **queu);
 char				**map_to_s(char *s, int count, listt **node);
 void				mylist(void *node, listt **nodee);
 void				garbage_collector(listt **lst, void (*del)(void *));
@@ -178,8 +175,6 @@ void				list_fill(list **list, listt **node);
 void				store_line(char **line, myvar *var, char **s);
 void				fill_listt(list **listo, listt **liste);
 void				add_node_list(char *name, list **listo, int *countt,
-						listt **node);
-void				do_something(player p, char **s, queue **queue,
 						listt **node);
 int					check_xy(int x, int y, char **s);
 int					check_map2(char **s);
@@ -199,5 +194,7 @@ void execute(myvar *var);
 void calcul_map_dimens(myvar *var);
 void my_mlx_pixel_put(t_data *data, int x, int y, int color);
 void	draw_2d_map(myvar *var);
+void	store_to_textures(myvar *var, char *s);
+int create_rgb(int r , int g , int b);
 
 #endif

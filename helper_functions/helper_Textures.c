@@ -1,18 +1,6 @@
 #include "../cub3d.h"
 
-void store_to_textures(myvar *var , char *s)
-{
-	int i = 0;
-	if(var->textures[3]!= NULL)
-		return ;
-
-	while (var->textures[i])
-		i++;
-	
-	var->textures[i] = s;
-}
-
-int	check_texture(char *s, list **list, myvar *var )
+int	check_texture(char *s, list **list, myvar *var)
 {
 	char	**ss;
 
@@ -23,17 +11,17 @@ int	check_texture(char *s, list **list, myvar *var )
 	{
 		if (open(ss[1], O_RDONLY) == -1 || !(check_extension(ss[1], ".xpm")))
 			return (1);
-
-		store_to_textures(var,ss[1]);
+		store_to_textures(var, ss[1]);
 		add_node_list(ss[0], list, &var->count, &(var->list));
 	}
 	return (0);
 }
+
 void	check_texture_floor(char *c, char *s, myvar *var, list **listt)
 {
-		if ((!ft_strncmp(c, "NO", 2)) || (!ft_strncmp(c, "SO", 2)) || !ft_strncmp(c,
+	if ((!ft_strncmp(c, "NO", 2)) || (!ft_strncmp(c, "SO", 2)) || !ft_strncmp(c,
 			"WE", 2) || !ft_strncmp(c, "EA", 2))
-				check_texture(s, listt, var );
+		check_texture(s, listt, var);
 	else
 		check_floor(s, listt, var);
 }
@@ -51,12 +39,6 @@ int	check_sfloor(char *s)
 	return (0);
 }
 
-int	create_rgb( int r, int g, int b)
-{
-	return ( r << 16 | g << 8 | b);
-}
-
-
 int	check_floor(char *s, list **listo, myvar *var)
 {
 	char	*sss;
@@ -65,8 +47,6 @@ int	check_floor(char *s, list **listo, myvar *var)
 
 	if (process_s(&s, &sss, &(var->list)))
 		return (1);
-
-	
 	i = -1;
 	ss = ft_split(s, ',');
 	add_to_listt(ss, &(var->list));
@@ -75,15 +55,14 @@ int	check_floor(char *s, list **listo, myvar *var)
 		return (1);
 	while (ss[++i])
 	{
-		if (check_ss(ss[i], &(var->list)) || ft_atoi(ss[i]) < 0 || ft_atoi(ss[i]) > 255)
+		if (check_ss(ss[i], &(var->list)) || ft_atoi(ss[i]) < 0
+			|| ft_atoi(ss[i]) > 255)
 			return (1);
 	}
-	
-	if(sss[0] == 'F')
-		var->floor = create_rgb(ft_atoi(ss[0]),ft_atoi(ss[1]),ft_atoi(ss[2]));
-	else 
-		var->cel = create_rgb(ft_atoi(ss[0]),ft_atoi(ss[1]),ft_atoi(ss[2]));
-
+	if (sss[0] == 'F')
+		var->floor = create_rgb(ft_atoi(ss[0]), ft_atoi(ss[1]), ft_atoi(ss[2]));
+	else
+		var->cel = create_rgb(ft_atoi(ss[0]), ft_atoi(ss[1]), ft_atoi(ss[2]));
 	add_node_list(sss, listo, &var->count, &(var->list));
 	return (0);
 }
