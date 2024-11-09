@@ -6,12 +6,29 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 19:40:26 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/08 00:50:40 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/08 11:48:32 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./cub3d.h"
 
+t_texture textures[4]; 
+
+
+void load_textures(void *mlx,myvar *var)
+{
+	
+	int i = -1;
+
+	while (++i < 4)
+	{
+		textures[i].img = mlx_xpm_file_to_image(mlx,var->textures[i] , &textures[i].width, &textures[i].height);
+        textures[i].addr = mlx_get_data_addr(textures[i].img, &textures[i].bits_per_pixel,
+                                              &textures[i].line_length, &textures[i].endian);
+	}
+	
+ 
+}
 double get_time()
 {
 	struct timeval tv;
@@ -306,137 +323,55 @@ void detect_direc_player(myvar *var)
         i++;
     }
 }
+int get_texture_color(int type_wall, int x, int y)
+{
 
-void draw_v_line(t_data *data, int x, t_ray *ray, myvar *var)
+    char *pixel = textures[type_wall].addr + (y * textures[type_wall].line_length + x * 4);
+    return *(unsigned int *)pixel;
+}
+
+void draw_v_line(t_data *data, int x, t_ray *ray, myvar *var,double ray_dir_x, double ray_dir_y)
 {
     int y = ray->draw_start;
     int color;
+    int i = -1;
+
+    while (++i <  y)
+			my_mlx_pixel_put(data, x, i, var->floor);
+
+i = ray->draw_end;
+  while (i < screen_height)
+    {
+        my_mlx_pixel_put(data, x, i, var->cel);
+        i++;
+    }
+		double wall_x = 0; 
 
     if (ray->map_y >= 0 && ray->map_y < var->data->map_rows && ray->map_x >= 0 && ray->map_x < var->data->map_cols && (size_t)ray->map_x < ft_strlen(var->s[ray->map_y]))
 	{
-        if (ray->wall_orientation == 0)
-            color = 0xFF0000; // S - Red
-        else if (ray->wall_orientation == 1)
-            color = 0x00FF00; // N - Green
-        else if (ray->wall_orientation == 2)
-            color = 0x0000FF; // W - Blue
-        else if (ray->wall_orientation == 3)
-            color = 0xFFFF00; // E - Yellow
-        else
-            color = 0xFFFFFF; // Default - White
 
+    if (ray->side == 0) 
+			wall_x = data->pos_y +ray->perp_wall_dist * ray_dir_y;
+		else 
+			wall_x = data->pos_x + ray->perp_wall_dist * ray_dir_x;
+		
+		 wall_x -= floor(wall_x);
+		
+		int tex_x = (int)(wall_x * textures[ray->wall_orientation].width);
         while (y < ray->draw_end)
 		{
-            my_mlx_pixel_put(data, x, y, color);
-            y++;
+          int tex_y  = ((y - ray->draw_start)* textures[ray->wall_orientation].height ) / ray->line_height;
+			 color = get_texture_color(ray->wall_orientation, tex_x, tex_y);
+			my_mlx_pixel_put(data, x, y, color);
+			y++;
         }
+          
     }
+
+    
 }
 
-int get_2d_map_color(int wall_type, int orientation)
-{
-    if (wall_type == 1)
-    {
-        if (orientation == 0)
-            return 0x00FF00;      // N - Green
-        else if (orientation == 1)
-            return 0xFF0000;      // S - Red
-        else if (orientation == 2)
-            return 0xFFFF00;      // E- Yellow
-        else if (orientation == 3)
-            return 0x0000FF;      // W- Blue
-        return 0xFFFFFF;          // default- White
-    }
-    return 0x000000;             // Ground - Black
-}
 
-static int get_wall_orientation(myvar *var, int x, int y)
-{
-    if (y > 0 && (size_t)x < ft_strlen(var->s[y-1]) && var->s[y-1][x] == '0')
-        return 1;
-    if (y < var->data->map_rows - 1 && (size_t)x < ft_strlen(var->s[y+1]) && var->s[y+1][x] == '0')
-        return 0;
-    if (x > 0 && var->s[y][x-1] == '0')
-        return 2;
-    if (x < var->data->map_cols - 1 && var->s[y][x+1] == '0')
-        return 3;
-    return -1;
-}
-
-static void draw_map_tile(myvar *var, int x, int y, int mini_size, int map_offset)
-{
-    int wall_type;
-    int orientation;
-    int color;
-	int py;
-	int px;
-
-    if ((size_t)x >= ft_strlen(var->s[y]))
-		return;
-	wall_type = var->s[y][x] - '0';
-	if (wall_type == 1)
-		orientation = get_wall_orientation(var, x, y);
-	else
-		orientation = -1;
-	color = get_2d_map_color(wall_type, orientation);
-
-	py = 0;
-	while (py < mini_size)
-	{
-		px = 0;
-		while (px < mini_size)
-		{
-			my_mlx_pixel_put(var->data,
-			map_offset + x * mini_size + px, map_offset + y * mini_size + py, color);
-			px++;
-		}
-		py++;
-	}
-}
-
-static void draw_player_position(t_data *data, int mini_size, int map_offset)
-{
-    int player_x = (int)(data->pos_x * mini_size);
-    int player_y = (int)(data->pos_y * mini_size);
-
-	int px = -2;
-	while (px <= 2) {
-		int py = -2;
-		while (py <= 2) {
-			my_mlx_pixel_put(data,
-							map_offset + player_x + px,
-							map_offset + player_y + py,
-							0xFF0000);
-			py++;
-		}
-		px++;
-	}
-}
-
-void draw_2d_map(myvar *var)
-{
-    int mini_size;
-    int map_offset;
-
-	mini_size = MAP_WIDTH / 20;
-	map_offset = 10;
-	int y;
-	int x;
-
-	y = 0;
-
-	while (y < var->data->map_rows)
-	{
-		x = 0;
-		while (x < var->data->map_cols)
-		{
-			draw_map_tile(var, x, y, mini_size, map_offset);
-			x++;
-		}
-		y++;
-	}
-    draw_player_position(var->data, mini_size, map_offset);
-}
 
 static void calculate_step_direction(double ray_dir_x, double ray_dir_y, int *step_x, int *step_y)
 {
@@ -568,7 +503,7 @@ int raycasting_loop(myvar *var)
 		calculate_dist(data, &ray, ray_dir_x, ray_dir_y);
 		dda_algo(&ray, var);
 		calcul_wall_dist(data, &ray, ray_dir_x, ray_dir_y);
-		draw_v_line(data, x, &ray, var);
+		draw_v_line(data, x, &ray, var,ray_dir_x, ray_dir_y);
 		x++;
 	}
 	mlx_put_image_to_window(data->mlx, data->win, data->img, 0, 0);
@@ -581,12 +516,15 @@ int raycasting_loop(myvar *var)
 
 void execute(myvar *var)
 {
+
 	t_data *data = var->data;
 	data->pos_x = var->player.x + 0.5;
 	data->pos_y = var->player.y + 0.5;
 	memset(data->keys, 0, sizeof(data->keys));
 	data->mlx = mlx_init();
 	data->win = mlx_new_window(data->mlx, screen_width, screen_height, "CUB3D");
+    	  load_textures(data->mlx,var);
+
 	data->img = mlx_new_image(data->mlx, screen_width, screen_height);
 	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel, &data->line_length, &data->endian);
 	mlx_hook(data->win, 2, 1L<<0, key_press, data);

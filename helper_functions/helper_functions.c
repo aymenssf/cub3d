@@ -57,7 +57,7 @@ int	find_direction(player *player, char **mini_map)
 				}
 			else if (mini_map[i][j] != ' ' && mini_map[i][j] != '0'
 					&& mini_map[i][j] != '1')
-				return (printf("there is an error on player"), 1);
+				return (printf("there is an eror on player"), 1);
 		}
 	}
 	if (flag != 1)
@@ -86,7 +86,7 @@ void	parse_s(char **s, int count)
 	check = 0;
 	countt = 0;
 
-
+	
 	while (**s)
 	{
 		parse_ss(s, &check, &countt, &i);
@@ -103,7 +103,7 @@ void	parse_s(char **s, int count)
 		else
 			break ;
 	}
-
+	
 	if (s[0][i - 1] == ' ')
 		i--;
 

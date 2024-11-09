@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cub3d.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/08 11:47:45 by aassaf            #+#    #+#             */
+/*   Updated: 2024/11/08 12:37:59 by aassaf           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef CUB3D_H
 # define CUB3D_H
 
@@ -21,16 +33,16 @@
 #define KEY_D 97
 #define KEY_A  100
 #define KEY_ESC 65307
-# include <X11/keysym.h>
-# include <X11/X.h>
+// # include <X11/keysym.h>
+// # include <X11/X.h>
 # include <sys/time.h>
 # include <string.h>
 # include <stdarg.h>
 #include <math.h>
-# include "mlx.h"
+# include "mlx_linux/mlx.h"
 
-#define screen_width 1920
-#define screen_height 1080
+#define screen_width 500
+#define screen_height 500
 #define MAP_HEIGHT 24
 #define MAP_WIDTH 240
 
@@ -93,18 +105,34 @@ typedef struct s_data
 	int keys[65536];
 } t_data;
 
+
+typedef struct s_texture {
+void *img;
+char *addr;
+int width;
+int height;
+int bits_per_pixel;
+int line_length;
+int endian;
+} t_texture;
+
+
 typedef struct myvar
 {
+
 	t_data			*data;
 	listt			*list;
 	my_map			map;
 	char			**s;
 	int				count;
-
+	int				map_offset;
 	int				i;
 	int				fd;
 	char			*str;
 	player			player;
+	int floor;
+	int cel;
+	char *textures[4];
 
 }					myvar;
 
@@ -155,12 +183,11 @@ void				do_something(player p, char **s, queue **queue,
 						listt **node);
 int					check_xy(int x, int y, char **s);
 int					check_map2(char **s);
-int					check_floor(char *s, list **listo, int *countt,
-						listt **node);
+int	check_floor(char *s, list **listo, myvar *var);
 void	check_texture_floor(char *c, char *s,myvar *var ,list **listt);
 int					process_s(char **s, char **ss, listt **node);
 int					count(char **s);
-int	check_texture(char *s, list **list, int *countt, listt **nodee);
+int	check_texture(char *s, list **list, myvar *var );
 int					check_ss(char *line, listt **node);
 void				add_nodee(char *name, list **listo, listt **liste);
 int					check_s(char **s, list **list, myvar *var);
@@ -170,6 +197,7 @@ void	parse_s(char **s, int count);
 int check_extension(char *str ,char *s);
 void execute(myvar *var);
 void calcul_map_dimens(myvar *var);
-void print_map(char **s);
+void my_mlx_pixel_put(t_data *data, int x, int y, int color);
+void	draw_2d_map(myvar *var);
 
 #endif

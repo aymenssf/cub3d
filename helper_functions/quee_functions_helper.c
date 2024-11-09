@@ -5,6 +5,8 @@ queue	*add_node(int x, int y)
 	queue	*queuee;
 
 	queuee = malloc(sizeof(queue));
+	if(!queuee)
+		return NULL;
 	queuee->x = x;
 	queuee->y = y;
 	queuee->visited = 1;
@@ -18,6 +20,9 @@ void	add_quee(queue **queu, int x, int y, listt **node)
 	queue	*head;
 
 	queuee = malloc(sizeof(queue));
+	if(!queuee)
+		return ;
+	
 	queuee->x = x;
 	queuee->y = y;
 	queuee->visited = 1;
@@ -41,9 +46,7 @@ void	dequee(queue **queu)
 	if (!(*queu))
 		return ;
 	if (!(*queu)->next)
-	{
 		*queu = NULL;
-	}
 	else
 	{
 		front = *queu;

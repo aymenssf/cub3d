@@ -19,14 +19,16 @@ int	parse_map(myvar *var)
 	char	*s;
 	char	**ss;
 
-	if (var->fd < 0)
-		return (1);
 	list_fill(&listt, &(var->list));
 	s = ft_strdup("");
 	mylist(s, &(var->list));
 	line = get_next_line(var->fd);
+	if(!line)
+		return 1;
+	
 	while ((line))
 		store_line(&line, var, &s);
+	
 	var->str = s;
 	ss = ft_split(s, '\n');
 	mylist(ss, &(var->list));
@@ -35,7 +37,7 @@ int	parse_map(myvar *var)
 		return (1);
 	var->s = map_to_s(var->str, var->count, &(var->list));
 
-
+	
 	return (0);
 }
 
@@ -43,9 +45,16 @@ int	check_extension(char *str, char *s)
 {
 	int	i;
 
-
+	i = -1;
+	int check = 0;
+	while (str[++i])
+		if(str[i] == '.')
+			check = 1;
+	
 	i = ft_strlen(str) - 4;
-	if (!ft_strncmp(str + i, s, i))
+	
+	
+	if (check && !ft_strncmp(str + i, s, ft_strlen(s)))
 		return (1);
 	else
 		return (0);
@@ -53,9 +62,15 @@ int	check_extension(char *str, char *s)
 
 void	init(myvar *var, int argc, char **argv)
 {
-	if (argc < 1)
+
+	int i = -1;
+	while (++i < 4)
+		var->textures[i] = NULL;
+	
+	
+	if (argc <= 1)
 	{
-		var->fd = -1;
+		var->fd = 0;
 		return ;
 	}
 	else
@@ -64,31 +79,36 @@ void	init(myvar *var, int argc, char **argv)
 		if	(!(var->data))
 			return ;
 		var->s = NULL;
+		var->cel =0;
+		var->floor = 0;
+		var->fd = 0;
 		var->list = NULL;
 		var->str = NULL;
 		var->count = 0;
+		
 		var->map.texture = malloc(sizeof(var->map) * 4);
 		if (!(var->map.texture))
 			return ;
+		
 		mylist(var->map.texture, &(var->list));
-		var->fd = open(argv[1], O_RDWR);
-		if (!(check_extension(argv[1], ".cub")) || argc != 2)
-			var->fd = -1;
+		
+		
+		var->fd = open(argv[1], O_RDONLY);
+		
+		if (var->fd == -1 || (!(check_extension(argv[1], ".cub"))))
+			var->fd = 0;
 	}
 }
 
-// void execute(myvar var)
-// {
-// 	printf("%d",var.player.x);
-// }
+
 
 int	main(int argc, char **argv)
 {
 	myvar	*var = malloc(sizeof(myvar));
-	// print textures
 	init(var, argc, argv);
+	
 	if (!var->fd)
-		return (-1);
+		return (printf("error"),1);
 	if (parse_map(var) || find_direction(&var->player, var->s)
 		|| check_map2(var->s))
 	{

@@ -55,7 +55,7 @@ void	store_line(char **line, myvar *var, char **s)
 
 void	add_node_list(char *name, list **listo, int *countt, listt **node)
 {
-	list	*head = NULL;
+	list	*head;
 
 	head = *listo;
 	while ((head))
