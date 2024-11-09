@@ -38,30 +38,32 @@ char	**map_to_s(char *s, int count, listt **node)
 void	mylist(void *node, listt **nodee)
 {
 	listt	*nod;
-	listt	*head;
 
-	if (!node || !nodee)
-		return;
 
+	if(!node || !nodee)
+		return ;
+	
 	nod = malloc(sizeof(listt));
 	if (!nod)
 		return ;
 	nod->node = node;
 	nod->next = NULL;
 	if (!*nodee)
-		*nodee = nod;
-	else
 	{
+		*nodee = nod;
+		return ;
+	}
+		listt	*head;
 		head = *nodee;
-			while (head->next)
+		while (head->next)
 			head = head->next;
 		head->next = nod;
-	}
+	
 }
 
 void	garbage_collector(listt **lst, void (*del)(void *))
 {
-	listt	*temp = NULL;
+	listt	*temp;
 
 	if (!lst)
 		return ;
@@ -79,9 +81,8 @@ void	add_to_listt(char **ss, listt **node)
 	int i;
 
 	i = -1;
+
+	
 	while (ss[++i])
-	{
-		if (ss[i])
 			mylist(ss[i], node);
-	}
 }

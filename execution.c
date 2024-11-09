@@ -12,6 +12,23 @@
 
 #include "./cub3d.h"
 
+t_texture textures[4]; 
+
+
+void load_textures(void *mlx,myvar *var)
+{
+	
+	int i = -1;
+
+	while (++i < 4)
+	{
+		textures[i].img = mlx_xpm_file_to_image(mlx,var->textures[i] , &textures[i].width, &textures[i].height);
+        textures[i].addr = mlx_get_data_addr(textures[i].img, &textures[i].bits_per_pixel,
+                                              &textures[i].line_length, &textures[i].endian);
+	}
+	
+ 
+}
 double get_time()
 {
 	struct timeval tv;
@@ -306,31 +323,52 @@ void detect_direc_player(myvar *var)
         i++;
     }
 }
+int get_texture_color(int type_wall, int x, int y)
+{
 
-void draw_v_line(t_data *data, int x, t_ray *ray, myvar *var)
+    char *pixel = textures[type_wall].addr + (y * textures[type_wall].line_length + x * 4);
+    return *(unsigned int *)pixel;
+}
+
+void draw_v_line(t_data *data, int x, t_ray *ray, myvar *var,double ray_dir_x, double ray_dir_y)
 {
     int y = ray->draw_start;
     int color;
+    int i = -1;
+
+    while (++i <  y)
+			my_mlx_pixel_put(data, x, i, var->floor);
+
+i = ray->draw_end;
+  while (i < screen_height)
+    {
+        my_mlx_pixel_put(data, x, i, var->cel);
+        i++;
+    }
+		double wall_x = 0; 
 
     if (ray->map_y >= 0 && ray->map_y < var->data->map_rows && ray->map_x >= 0 && ray->map_x < var->data->map_cols && (size_t)ray->map_x < ft_strlen(var->s[ray->map_y]))
 	{
-        if (ray->wall_orientation == 0)
-            color = 0xFF0000; // S - Red
-        else if (ray->wall_orientation == 1)
-            color = 0x00FF00; // N - Green
-        else if (ray->wall_orientation == 2)
-            color = 0x0000FF; // W - Blue
-        else if (ray->wall_orientation == 3)
-            color = 0xFFFF00; // E - Yellow
-        else
-            color = 0xFFFFFF; // Default - White
 
+    if (ray->side == 0) 
+			wall_x = data->pos_y +ray->perp_wall_dist * ray_dir_y;
+		else 
+			wall_x = data->pos_x + ray->perp_wall_dist * ray_dir_x;
+		
+		 wall_x -= floor(wall_x);
+		
+		int tex_x = (int)(wall_x * textures[ray->wall_orientation].width);
         while (y < ray->draw_end)
 		{
-            my_mlx_pixel_put(data, x, y, color);
-            y++;
+          int tex_y  = ((y - ray->draw_start)* textures[ray->wall_orientation].height ) / ray->line_height;
+			 color = get_texture_color(ray->wall_orientation, tex_x, tex_y);
+			my_mlx_pixel_put(data, x, y, color);
+			y++;
         }
+          
     }
+
+    
 }
 
 
@@ -465,7 +503,7 @@ int raycasting_loop(myvar *var)
 		calculate_dist(data, &ray, ray_dir_x, ray_dir_y);
 		dda_algo(&ray, var);
 		calcul_wall_dist(data, &ray, ray_dir_x, ray_dir_y);
-		draw_v_line(data, x, &ray, var);
+		draw_v_line(data, x, &ray, var,ray_dir_x, ray_dir_y);
 		x++;
 	}
 	mlx_put_image_to_window(data->mlx, data->win, data->img, 0, 0);
@@ -478,12 +516,15 @@ int raycasting_loop(myvar *var)
 
 void execute(myvar *var)
 {
+
 	t_data *data = var->data;
 	data->pos_x = var->player.x + 0.5;
 	data->pos_y = var->player.y + 0.5;
 	memset(data->keys, 0, sizeof(data->keys));
 	data->mlx = mlx_init();
 	data->win = mlx_new_window(data->mlx, screen_width, screen_height, "CUB3D");
+    	  load_textures(data->mlx,var);
+
 	data->img = mlx_new_image(data->mlx, screen_width, screen_height);
 	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel, &data->line_length, &data->endian);
 	mlx_hook(data->win, 2, 1L<<0, key_press, data);
