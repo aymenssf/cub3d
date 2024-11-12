@@ -14,6 +14,20 @@
 
 t_texture textures[4];
 
+t_texture texture_hands;
+
+
+void load_textures_hands(void *mlx)
+{
+	
+
+		texture_hands.img = mlx_xpm_file_to_image(mlx,"file.xpm" , &texture_hands.width, &texture_hands.height);
+        texture_hands.addr = mlx_get_data_addr(texture_hands.img, &texture_hands.bits_per_pixel,
+                                              &texture_hands.line_length, &texture_hands.endian);
+	
+ 
+}
+
 
 void load_textures(void *mlx,myvar *var)
 {
@@ -478,6 +492,42 @@ void calcul_map_dimens(myvar *var)
 	var->data->map_rows = row;
 	var->data->map_cols = col;
 }
+
+int get_texture_hands_color(int x, int y) {
+  
+
+    int offset = (y * texture_hands.line_length) + (x * (texture_hands.bits_per_pixel / 8));
+    
+    int color = *(int *)(texture_hands.addr + offset);
+    
+    return color;
+} 
+
+void draw_hands(t_data *data)
+{
+
+        int vertical_offset = 0;
+    if (1)
+        vertical_offset = sin(get_time() * 0.01) * 10.0 ;
+
+
+ int y = 0;
+        while (y < 630) {
+            int x = 0;
+            while (x < 630) {
+                unsigned int color = (unsigned int)get_texture_hands_color(x, y);
+            if (color != 0xFF000000)
+            { 
+                    my_mlx_pixel_put(data, (screen_width - 370 + vertical_offset) / 2 + x,
+                                (screen_height - 370 + vertical_offset )+ y, color);
+            }
+                x++;
+            }
+            y++;
+        }
+      
+    
+}
 int raycasting_loop(myvar *var)
 {
 	t_data *data = var->data;
@@ -506,8 +556,11 @@ int raycasting_loop(myvar *var)
 		draw_v_line(data, x, &ray, var,ray_dir_x, ray_dir_y);
 		x++;
 	}
-	mlx_put_image_to_window(data->mlx, data->win, data->img, 0, 0);
+	
+    mlx_put_image_to_window(data->mlx, data->win, data->img, 0, 0);
+        draw_hands(data);
     ft_draw_mini_map(var);
+
 	// draw_2d_map(var);
 	// if ((x - MAP_WIDTH) % 20 == 0)
 	// 	draw_ray(var, data, ray_dir_x, ray_dir_y, 0x2000FF00);
@@ -525,6 +578,8 @@ void execute(myvar *var)
 	data->mlx = mlx_init();
 	data->win = mlx_new_window(data->mlx, screen_width, screen_height, "CUB3D");
     	  load_textures(data->mlx,var);
+               
+         load_textures_hands(data->mlx);
 
 	data->img = mlx_new_image(data->mlx, screen_width, screen_height);
 	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel, &data->line_length, &data->endian);
