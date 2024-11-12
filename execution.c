@@ -6,18 +6,18 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 19:40:26 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/08 11:48:32 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/12 09:51:37 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./cub3d.h"
 
-t_texture textures[4]; 
+t_texture textures[4];
 
 
 void load_textures(void *mlx,myvar *var)
 {
-	
+
 	int i = -1;
 
 	while (++i < 4)
@@ -26,8 +26,8 @@ void load_textures(void *mlx,myvar *var)
         textures[i].addr = mlx_get_data_addr(textures[i].img, &textures[i].bits_per_pixel,
                                               &textures[i].line_length, &textures[i].endian);
 	}
-	
- 
+
+
 }
 double get_time()
 {
@@ -345,18 +345,18 @@ i = ray->draw_end;
         my_mlx_pixel_put(data, x, i, var->cel);
         i++;
     }
-		double wall_x = 0; 
+		double wall_x = 0;
 
     if (ray->map_y >= 0 && ray->map_y < var->data->map_rows && ray->map_x >= 0 && ray->map_x < var->data->map_cols && (size_t)ray->map_x < ft_strlen(var->s[ray->map_y]))
 	{
 
-    if (ray->side == 0) 
+    if (ray->side == 0)
 			wall_x = data->pos_y +ray->perp_wall_dist * ray_dir_y;
-		else 
+		else
 			wall_x = data->pos_x + ray->perp_wall_dist * ray_dir_x;
-		
+
 		 wall_x -= floor(wall_x);
-		
+
 		int tex_x = (int)(wall_x * textures[ray->wall_orientation].width);
         while (y < ray->draw_end)
 		{
@@ -365,10 +365,10 @@ i = ray->draw_end;
 			my_mlx_pixel_put(data, x, y, color);
 			y++;
         }
-          
+
     }
 
-    
+
 }
 
 
@@ -507,9 +507,10 @@ int raycasting_loop(myvar *var)
 		x++;
 	}
 	mlx_put_image_to_window(data->mlx, data->win, data->img, 0, 0);
-	draw_2d_map(var);
-	if ((x - MAP_WIDTH) % 20 == 0)
-		draw_ray(var, data, ray_dir_x, ray_dir_y, 0x2000FF00);
+    ft_draw_mini_map(var);
+	// draw_2d_map(var);
+	// if ((x - MAP_WIDTH) % 20 == 0)
+	// 	draw_ray(var, data, ray_dir_x, ray_dir_y, 0x2000FF00);
 	mlx_do_sync(data->mlx);
 	return (0);
 }

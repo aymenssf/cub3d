@@ -5,115 +5,206 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/08 11:47:36 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/08 11:57:51 by aassaf           ###   ########.fr       */
+/*   Created: 2024/11/12 22:48:10 by aassaf            #+#    #+#             */
+/*   Updated: 2024/11/12 22:48:12 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./cub3d.h"
+#include "cub3d.h"
 
-int	get_2d_map_color(int wall_type, int orientation)
+void	my_mlx_pixel_put_transparent(t_data *data, int x, int y, int color,
+		float alpha)
 {
-	if (wall_type == 1)
+	unsigned int	*dst;
+	unsigned int	src_rgb;
+	unsigned int	dst_rgb;
+	unsigned int	r;
+	unsigned int	g;
+	unsigned int	b;
+
+	if (x >= 0 && x < screen_width && y >= 0 && y < screen_height)
 	{
-		if (orientation == 0)
-			return (0x00FF00);
-		else if (orientation == 1)
-			return (0xFF0000);
-		else if (orientation == 2)
-			return (0xFFFF00);
-		else if (orientation == 3)
-			return (0x0000FF);
+		dst = (unsigned int *)(data->addr + (y * data->line_length + x
+					* (data->bits_per_pixel / 8)));
+		src_rgb = color & 0x00FFFFFF;
+		dst_rgb = *dst & 0x00FFFFFF;
+		r = ((src_rgb >> 16) & 0xFF) * alpha + ((dst_rgb >> 16) & 0xFF) * (1
+				- alpha);
+		g = ((src_rgb >> 8) & 0xFF) * alpha + ((dst_rgb >> 8) & 0xFF) * (1
+				- alpha);
+		b = (src_rgb & 0xFF) * alpha + (dst_rgb & 0xFF) * (1 - alpha);
+		*dst = (r << 16) | (g << 8) | b;
+	}
+}
+
+void	draw_mini_square(t_data *data, double x, double y, int color)
+{
+	float	alpha;
+	int		rounded_x;
+	int		rounded_y;
+
+	alpha = 0.65f;
+	rounded_x = (int)(x);
+	rounded_y = (int)(y);
+	int i = 0;
+	while (i < TILE_SIZE)
+	{
+		int j = 0;
+		while (j < TILE_SIZE)
+		{
+			if (rounded_x + i < screen_width && rounded_y + j < screen_height
+				&& rounded_x + i >= 0 && rounded_y + j >= 0)
+				my_mlx_pixel_put_transparent(data, rounded_x + i, rounded_y + j,
+					color, alpha);
+			j++;
+		}
+		i++;
+	}
+}
+
+void	draw_mini_player(t_data *data, double x, double y)
+{
+	int		player_size;
+	float	alpha;
+	int		color;
+	int		rounded_x;
+	int		rounded_y;
+
+	player_size = 6;
+	alpha = 0.9f;
+	color = 0xFF0000;
+	rounded_x = (int)(x - player_size / 2);
+	rounded_y = (int)(y - player_size / 2);
+	int i = 0;
+	while (i < player_size)
+	{
+		int j = 0;
+		while (j < player_size)
+		{
+			if (rounded_x + i < screen_width && rounded_y + j < screen_height
+				&& rounded_x + i >= 0 && rounded_y + j >= 0)
+				my_mlx_pixel_put_transparent(data, rounded_x + i, rounded_y + j,
+					color, alpha);
+			j++;
+		}
+		i++;
+	}
+}
+
+void	draw_filled_fov(myvar *var, double start_x, double start_y,
+		double start_angle, double end_angle, int radius)
+{
+	int		color;
+	float	alpha;
+	double	angle_step;
+	int		map_x;
+	int		map_y;
+	double	x;
+	double	y;
+	int		rounded_x;
+	int		rounded_y;
+
+	color = 0x00FF00;
+	alpha = 0.1f;
+	angle_step = 0.02;
+	double angle = start_angle;
+	while (angle <= end_angle)
+	{
+		double r = 0;
+		while (r <= radius)
+		{
+			x = start_x + (cos(angle) * r);
+			y = start_y + (sin(angle) * r);
+			map_x = (int)((var->data->pos_x + (x - start_x) / TILE_SIZE));
+			map_y = (int)((var->data->pos_y + (y - start_y) / TILE_SIZE));
+			rounded_x = (int)(x);
+			rounded_y = (int)(y);
+			if (rounded_x < screen_width && rounded_y < screen_height
+				&& rounded_x >= 0 && rounded_y >= 0)
+			{
+				my_mlx_pixel_put_transparent(var->data, rounded_x, rounded_y,
+					color, alpha);
+			}
+			if (map_y >= 0 && map_y < var->data->map_rows && map_x >= 0
+				&& map_x < var->data->map_cols
+				&& (size_t)map_x < ft_strlen(var->s[map_y]))
+			{
+				if (var->s[map_y][map_x] == '1')
+					break ;
+			}
+			r += 1.0;
+		}
+		angle += angle_step;
+	}
+}
+
+int	get_map_color(char tile)
+{
+	if (tile == '1')
+		return (0x808080);
+	else if (tile == '0')
 		return (0xFFFFFF);
-	}
-	return (0x000000);
-}
-
-static int	get_wall_orientation(myvar *var, int x, int y)
-{
-	if (y > 0 && (size_t)x < ft_strlen(var->s[y - 1]) && var->s[y
-			- 1][x] == '0')
-		return (1);
-	if (y < var->data->map_rows - 1 && (size_t)x < ft_strlen(var->s[y + 1])
-		&& var->s[y + 1][x] == '0')
-		return (0);
-	if (x > 0 && var->s[y][x - 1] == '0')
-		return (2);
-	if (x < var->data->map_cols - 1 && var->s[y][x + 1] == '0')
-		return (3);
-	return (-1);
-}
-
-static void	draw_map_tile(myvar *var, int x, int y, int mini_size)
-{
-	int	wall_type;
-	int	orientation;
-	int	color;
-
-	int (px), (py);
-	if ((size_t)x >= ft_strlen(var->s[y]))
-		return ;
-	wall_type = var->s[y][x] - '0';
-	if (wall_type == 1)
-		orientation = get_wall_orientation(var, x, y);
 	else
-		orientation = -1;
-	color = get_2d_map_color(wall_type, orientation);
-	py = 0;
-	while (py < mini_size)
-	{
-		px = 0;
-		while (px < mini_size)
-		{
-			my_mlx_pixel_put(var->data, var->map_offset + x * mini_size + px,
-				var->map_offset + y * mini_size + py, color);
-			px++;
-		}
-		py++;
-	}
+		return (0x808080);
 }
 
-static void	draw_player_position(t_data *data, int mini_size, int map_offset)
+void	ft_draw_mini_map(myvar *var)
 {
-	int	player_x;
-	int	player_y;
-	int	px;
-	int	py;
+	t_data	*data;
+	double	player_x;
+	double	player_y;
+	double	offset_x;
+	double	offset_y;
+	int		base_x;
+	int		base_y;
+	int		map_x;
+	int		map_y;
+	double	screen_x;
+	double	screen_y;
+	double	center_x;
+	double	center_y;
+	double	fov;
+	double	player_angle;
+	double	start_angle;
+	double	end_angle;
 
-	player_x = (int)(data->pos_x * mini_size);
-	player_y = (int)(data->pos_y * mini_size);
-	px = -2;
-	while (px <= 2)
+	data = var->data;
+	player_x = data->pos_x;
+	player_y = data->pos_y;
+	offset_x = (player_x - floor(player_x)) * TILE_SIZE;
+	offset_y = (player_y - floor(player_y)) * TILE_SIZE;
+	base_x = (int)floor(player_x) - MINI_MAP_SIZE;
+	base_y = (int)floor(player_y) - MINI_MAP_SIZE;
+	int y = 0;
+	while (y <= MINI_MAP_SIZE * 2)
 	{
-		py = -2;
-		while (py <= 2)
+		int x = 0;
+		while (x <= MINI_MAP_SIZE * 2)
 		{
-			my_mlx_pixel_put(data, map_offset + player_x + px, map_offset
-				+ player_y + py, 0xFF0000);
-			py++;
-		}
-		px++;
-	}
-}
-
-void	draw_2d_map(myvar *var)
-{
-	int	mini_size;
-	int	y;
-	int	x;
-
-	mini_size = MAP_WIDTH / 20;
-	var->map_offset = 10;
-	y = 0;
-	while (y < var->data->map_rows)
-	{
-		x = 0;
-		while (x < var->data->map_cols)
-		{
-			draw_map_tile(var, x, y, mini_size);
+			map_x = base_x + x;
+			map_y = base_y + y;
+			screen_x = x * TILE_SIZE - offset_x;
+			screen_y = y * TILE_SIZE - offset_y;
+			if (map_y >= 0 && map_y < var->data->map_rows && map_x >= 0
+				&& map_x < var->data->map_cols
+				&& (size_t)map_x < ft_strlen(var->s[map_y]))
+			{
+				draw_mini_square(data, screen_x, screen_y,
+					get_map_color(var->s[map_y][map_x]));
+			}
+			else
+				draw_mini_square(data, screen_x, screen_y, get_map_color('1'));
 			x++;
 		}
 		y++;
 	}
-	draw_player_position(var->data, mini_size, var->map_offset);
+	center_x = MINI_MAP_SIZE * TILE_SIZE;
+	center_y = MINI_MAP_SIZE * TILE_SIZE;
+	fov = 60 * (M_PI / 180.0);
+	player_angle = atan2(data->dir_y, data->dir_x);
+	start_angle = player_angle - fov / 2;
+	end_angle = player_angle + fov / 2;
+	draw_filled_fov(var, center_x, center_y, start_angle, end_angle, 3
+		* TILE_SIZE);
+	draw_mini_player(data, center_x, center_y);
 }

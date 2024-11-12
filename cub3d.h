@@ -6,7 +6,7 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 11:47:45 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/08 12:37:59 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/12 22:48:16 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
-
+#define MINI_MAP_SIZE 5
+#define TILE_SIZE 16
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 42
 # endif
@@ -41,8 +42,10 @@
 #include <math.h>
 # include "mlx_linux/mlx.h"
 
-#define screen_width 500
-#define screen_height 500
+#define MINI_MAP_SIZE 5
+#define TILE_SIZE 16
+#define screen_width 1200
+#define screen_height 720
 #define MAP_HEIGHT 24
 #define MAP_WIDTH 240
 
@@ -103,8 +106,9 @@ typedef struct s_data
 	int map_rows;
 	int map_cols;
 	int keys[65536];
+	unsigned int *dst;
+	int color;
 } t_data;
-
 
 typedef struct s_texture {
 void *img;
@@ -196,5 +200,6 @@ void my_mlx_pixel_put(t_data *data, int x, int y, int color);
 void	draw_2d_map(myvar *var);
 void	store_to_textures(myvar *var, char *s);
 int create_rgb(int r , int g , int b);
+void ft_draw_mini_map(myvar *var);
 
 #endif
