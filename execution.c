@@ -518,7 +518,7 @@ void draw_hands(t_data *data)
                 unsigned int color = (unsigned int)get_texture_hands_color(x, y);
             if (color != 0xFF000000)
             { 
-                    my_mlx_pixel_put(data, (screen_width - 370 + vertical_offset) / 2 + x,
+                    my_mlx_pixel_put(data, (screen_width - 650 + vertical_offset) / 2 + x,
                                 (screen_height - 370 + vertical_offset )+ y, color);
             }
                 x++;
