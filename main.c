@@ -33,6 +33,7 @@ int	parse_map(myvar *var)
 	if (check_s(ss, &listt, var) || duplicate(listt) || var->count != 6)
 		return (1);
 	var->s = map_to_s(var->str, var->count, var);
+
 	return (0);
 }
 
@@ -87,7 +88,7 @@ int	main(int argc, char **argv)
 
 	if (!var.fd)
 	{
-				return (garbage_collector(&var, free), 1);
+		return (garbage_collector(&var, free), 1);
 
 		return (printf("error"), 1);
 	}

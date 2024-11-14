@@ -28,8 +28,17 @@ char	**map_to_s(char *s, int count, myvar *var)
 	while (s[++i])
 		check_s2(s[i], &check, var);
 	str = ft_split(s, '\n');
+	if(str == NULL)
+	{
+		printf("error");
+		garbage_collector(var, free);
+		exit(1);
+	}
+
 	add_to_listt(str, &var->list);
+
 	mylist(str, &var->list);
+
 	return (str);
 }
 

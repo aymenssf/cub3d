@@ -93,10 +93,10 @@ int close_window(myvar *data)
 	    mlx_destroy_window(data->data->mlx, data->data->win);
         
     mlx_destroy_image(data->data->mlx, data->data->img);
-    mlx_loop_end(data->data->mlx);
-    mlx_clear_window(data->data->mlx, data->data->win);
-    free(data->data->mlx);
-        destroy_image(data);
+    // mlx_loop_end(data->data->mlx);
+    // mlx_clear_window(data->data->mlx, data->data->win);
+    // free(data->data->mlx);
+     destroy_image(data);
       garbage_collector(data,free);
 
 	exit(0);
