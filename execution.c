@@ -492,15 +492,14 @@ void calcul_map_dimens(myvar *var)
 }
 
 int get_texture_hands_color(int x, int y) {
-
-
-    int offset = (y * texture_hands.line_length) + (x * (texture_hands.bits_per_pixel / 8));
-
-    int color = *(int *)(texture_hands.addr + offset);
-
-    return color;
+    if (x >= 0 && x < texture_hands.width && y >= 0 && y < texture_hands.height) {
+        int offset = (y * texture_hands.line_length) + (x * (texture_hands.bits_per_pixel / 8));
+        return *(unsigned int *)(texture_hands.addr + offset);
+    } else {
+        return 0xFF000000;
+    }
 }
-
+    
 void draw_hands(t_data *data)
 {
 
