@@ -6,7 +6,7 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 11:47:45 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/12 22:48:16 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/14 13:51:14 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,8 @@ typedef struct s_data
 	int keys[65536];
 	unsigned int *dst;
 	int color;
+	int mouse_x;
+	int mouse_y;
 } t_data;
 
 typedef struct s_texture {
@@ -201,5 +203,7 @@ void	draw_2d_map(myvar *var);
 void	store_to_textures(myvar *var, char *s);
 int create_rgb(int r , int g , int b);
 void ft_draw_mini_map(myvar *var);
-
+void setup_mouse(myvar *var);
+int handle_mouse(myvar *var);
+void destroy(t_data *data);
 #endif

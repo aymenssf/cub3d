@@ -6,7 +6,7 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 19:40:26 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/12 09:51:37 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/14 14:03:17 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,13 @@ t_texture texture_hands;
 
 void load_textures_hands(void *mlx)
 {
-	
+
 
 		texture_hands.img = mlx_xpm_file_to_image(mlx,"file.xpm" , &texture_hands.width, &texture_hands.height);
         texture_hands.addr = mlx_get_data_addr(texture_hands.img, &texture_hands.bits_per_pixel,
                                               &texture_hands.line_length, &texture_hands.endian);
-	
- 
+
+
 }
 
 
@@ -175,10 +175,8 @@ void read_keys(myvar *var)
         hdl_r_rot(data);
     if (keyDown(data, KEY_LEFT))
         hdl_l_rot(data);
-    if (keyDown(data, KEY_ESC)) {
-        mlx_destroy_window(data->mlx, data->win);
-        exit(0);
-    }
+    if (keyDown(data, KEY_ESC))
+        destroy(data);
 }
 
 void init_ray(t_data *data, int x, t_ray *ray)
@@ -494,14 +492,14 @@ void calcul_map_dimens(myvar *var)
 }
 
 int get_texture_hands_color(int x, int y) {
-  
+
 
     int offset = (y * texture_hands.line_length) + (x * (texture_hands.bits_per_pixel / 8));
-    
+
     int color = *(int *)(texture_hands.addr + offset);
-    
+
     return color;
-} 
+}
 
 void draw_hands(t_data *data)
 {
@@ -517,7 +515,7 @@ void draw_hands(t_data *data)
             while (x < 630) {
                 unsigned int color = (unsigned int)get_texture_hands_color(x, y);
             if (color != 0xFF000000)
-            { 
+            {
                     my_mlx_pixel_put(data, (screen_width - 650 + vertical_offset) / 2 + x,
                                 (screen_height - 370 + vertical_offset )+ y, color);
             }
@@ -525,8 +523,8 @@ void draw_hands(t_data *data)
             }
             y++;
         }
-      
-    
+
+
 }
 int raycasting_loop(myvar *var)
 {
@@ -556,16 +554,26 @@ int raycasting_loop(myvar *var)
 		draw_v_line(data, x, &ray, var,ray_dir_x, ray_dir_y);
 		x++;
 	}
-	
+
     mlx_put_image_to_window(data->mlx, data->win, data->img, 0, 0);
         draw_hands(data);
     ft_draw_mini_map(var);
-
-	// draw_2d_map(var);
-	// if ((x - MAP_WIDTH) % 20 == 0)
-	// 	draw_ray(var, data, ray_dir_x, ray_dir_y, 0x2000FF00);
+    handle_mouse(var);
 	mlx_do_sync(data->mlx);
 	return (0);
+}
+
+void destroy(t_data *data)
+{
+    mlx_destroy_image(data->mlx, data->img);
+    mlx_destroy_window(data->mlx, data->win);
+    mlx_loop_end(data->mlx);
+    mlx_clear_window(data->mlx, data->win);
+    mlx_destroy_display(data->mlx);
+    free(data->mlx);
+    free(data);
+    exit(0);
+
 }
 
 void execute(myvar *var)
@@ -578,14 +586,16 @@ void execute(myvar *var)
 	data->mlx = mlx_init();
 	data->win = mlx_new_window(data->mlx, screen_width, screen_height, "CUB3D");
     	  load_textures(data->mlx,var);
-               
+
          load_textures_hands(data->mlx);
 
 	data->img = mlx_new_image(data->mlx, screen_width, screen_height);
 	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel, &data->line_length, &data->endian);
+    setup_mouse(var);
 	mlx_hook(data->win, 2, 1L<<0, key_press, data);
 	mlx_hook(data->win, 3, 1L<<1, key_release, data);
 	mlx_hook(data->win, 17, 0, close_window, data);
 	mlx_loop_hook(data->mlx, raycasting_loop, var);
 	mlx_loop(data->mlx);
+    destroy(data);
 }
