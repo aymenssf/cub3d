@@ -12,7 +12,7 @@ int	check_texture(char *s, list **list, myvar *var)
 		if (open(ss[1], O_RDONLY) == -1 || !(check_extension(ss[1], ".xpm")))
 			return (1);
 		store_to_textures(var, ss[1]);
-		add_node_list(ss[0], list, &var->count, &(var->list));
+		add_node_list(ss[0], list, &var->count, (var));
 	}
 	return (0);
 }
@@ -63,7 +63,7 @@ int	check_floor(char *s, list **listo, myvar *var)
 		var->floor = create_rgb(ft_atoi(ss[0]), ft_atoi(ss[1]), ft_atoi(ss[2]));
 	else
 		var->cel = create_rgb(ft_atoi(ss[0]), ft_atoi(ss[1]), ft_atoi(ss[2]));
-	add_node_list(sss, listo, &var->count, &(var->list));
+	add_node_list(sss, listo, &var->count, (var));
 	return (0);
 }
 

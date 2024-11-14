@@ -172,9 +172,9 @@ typedef struct s_ray
 
 char				*get_next_line(int fd);
 int					find_direction(player *player, char **mini_map);
-char				**map_to_s(char *s, int count, listt **node);
+char				**map_to_s(char *s, int count, myvar *var);
 void				mylist(void *node, listt **nodee);
-void				garbage_collector(listt **lst, void (*del)(void *));
+void				garbage_collector(myvar *var, void (*del)(void *));
 void				add_to_listt(char **ss, listt **node);
 int					simple_check(int i, int j, char **s, int check);
 int					last_ind(char *str);
@@ -183,8 +183,7 @@ int					ft_listsize(list *lst);
 void				list_fill(list **list, listt **node);
 void				store_line(char **line, myvar *var, char **s);
 void				fill_listt(list **listo, listt **liste);
-void				add_node_list(char *name, list **listo, int *countt,
-						listt **node);
+void	add_node_list(char *name, list **listo, int *countt, myvar *var);
 int					check_xy(int x, int y, char **s);
 int					check_map2(char **s);
 int	check_floor(char *s, list **listo, myvar *var);

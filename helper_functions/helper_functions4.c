@@ -53,7 +53,7 @@ void	store_line(char **line, myvar *var, char **s)
 	*line = get_next_line(var->fd);
 }
 
-void	add_node_list(char *name, list **listo, int *countt, listt **node)
+void	add_node_list(char *name, list **listo, int *countt, myvar *var)
 {
 	list	*head;
 
@@ -69,7 +69,7 @@ void	add_node_list(char *name, list **listo, int *countt, listt **node)
 		head = head->next;
 	}
 	printf("error");
-	garbage_collector(node, free);
+	garbage_collector(var, free);
 	exit(1);
 }
 

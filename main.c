@@ -32,7 +32,7 @@ int	parse_map(myvar *var)
 	add_to_listt(ss, &(var->list));
 	if (check_s(ss, &listt, var) || duplicate(listt) || var->count != 6)
 		return (1);
-	var->s = map_to_s(var->str, var->count, &(var->list));
+	var->s = map_to_s(var->str, var->count, var);
 	return (0);
 }
 
@@ -57,8 +57,6 @@ void	init(myvar *var, int argc, char **argv)
 {
 	int	i;
 
-
-	memset(var->texturess,0,4*4);
 	i = -1;
 	while (++i < 4)
 		var->textures[i] = NULL;
@@ -83,23 +81,27 @@ void	init(myvar *var, int argc, char **argv)
 
 int	main(int argc, char **argv)
 {
-	myvar	*var;
+	myvar	var;
 
-	var = malloc(sizeof(myvar));
-	init(var, argc, argv);
-	if (!var->fd)
+	init(&var, argc, argv);
+
+	if (!var.fd)
+	{
+				return (garbage_collector(&var, free), 1);
+
 		return (printf("error"), 1);
-	if (parse_map(var) || find_direction(&var->player, var->s)
-		|| check_map2(var->s))
+	}
+	if (parse_map(&var) || find_direction(&var.player, var.s)
+		|| check_map2(var.s))
 	{
 		printf("error ");
-		return (garbage_collector(&var->list, free), 1);
+		return (garbage_collector(&var, free), 1);
 	}
 	else
 	{
-		calcul_map_dimens(var);
-		detect_direc_player(var);
-		execute(var);
+		calcul_map_dimens(&var);
+		detect_direc_player(&var);
+		execute(&var);
 	}
-	return (garbage_collector(&var->list, free), 1);
+	return (garbage_collector(&var, free), 1);
 }

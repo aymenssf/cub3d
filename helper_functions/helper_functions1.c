@@ -1,6 +1,6 @@
 #include "../cub3d.h"
 
-void	check_s2(char c, int *check, listt **node)
+void	check_s2(char c, int *check, myvar *var)
 {
 	if (c == '\n')
 		(*check)++;
@@ -9,14 +9,14 @@ void	check_s2(char c, int *check, listt **node)
 	else if (((c != '\n' && c != ' ') && *check > 1))
 	{
 		printf("error");
-		garbage_collector(node, free);
+		garbage_collector(var, free);
 		exit(1);
 	}
 	else
 		*check = 0;
 }
 
-char	**map_to_s(char *s, int count, listt **node)
+char	**map_to_s(char *s, int count, myvar *var)
 {
 	int		check;
 	int		i;
@@ -26,10 +26,10 @@ char	**map_to_s(char *s, int count, listt **node)
 	i = -1;
 	parse_s(&s, count);
 	while (s[++i])
-		check_s2(s[i], &check, node);
+		check_s2(s[i], &check, var);
 	str = ft_split(s, '\n');
-	add_to_listt(str, node);
-	mylist(str, node);
+	add_to_listt(str, &var->list);
+	mylist(str, &var->list);
 	return (str);
 }
 
@@ -56,9 +56,10 @@ void	mylist(void *node, listt **nodee)
 	head->next = nod;
 }
 
-void	garbage_collector(listt **lst, void (*del)(void *))
+void	garbage_collector(myvar *var, void (*del)(void *))
 {
 	listt	*temp;
+	listt **lst = &var->list;
 
 	if (!lst)
 		return ;
@@ -69,6 +70,7 @@ void	garbage_collector(listt **lst, void (*del)(void *))
 		del(*lst);
 		*lst = temp;
 	}
+	free(var->data);
 }
 
 void	add_to_listt(char **ss, listt **node)
