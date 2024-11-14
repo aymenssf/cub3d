@@ -12,18 +12,17 @@
 
 #include "./cub3d.h"
 
-t_texture textures[4];
-
-t_texture texture_hands;
+// t_texture textures[4];
 
 
-void load_textures_hands(void *mlx)
+
+void load_textures_hands(void *mlx,myvar *var)
 {
 
 
-		texture_hands.img = mlx_xpm_file_to_image(mlx,"file.xpm" , &texture_hands.width, &texture_hands.height);
-        texture_hands.addr = mlx_get_data_addr(texture_hands.img, &texture_hands.bits_per_pixel,
-                                              &texture_hands.line_length, &texture_hands.endian);
+		var->texture_hands.img = mlx_xpm_file_to_image(mlx,"file.xpm" , &var->texture_hands.width, &var->texture_hands.height);
+        var->texture_hands.addr = mlx_get_data_addr(var->texture_hands.img, &var->texture_hands.bits_per_pixel,
+                                              &var->texture_hands.line_length, &var->texture_hands.endian);
 
 
 }
@@ -36,9 +35,9 @@ void load_textures(void *mlx,myvar *var)
 
 	while (++i < 4)
 	{
-		textures[i].img = mlx_xpm_file_to_image(mlx,var->textures[i] , &textures[i].width, &textures[i].height);
-        textures[i].addr = mlx_get_data_addr(textures[i].img, &textures[i].bits_per_pixel,
-                                              &textures[i].line_length, &textures[i].endian);
+		var->texturess[i].img = mlx_xpm_file_to_image(mlx,var->textures[i] , &var->texturess[i].width, &var->texturess[i].height);
+        var->texturess[i].addr = mlx_get_data_addr(var->texturess[i].img, &var->texturess[i].bits_per_pixel,
+                                              &var->texturess[i].line_length, &var->texturess[i].endian);
 	}
 
 
@@ -77,20 +76,34 @@ void my_mlx_pixel_put(t_data *data, int x, int y, int color)
 	}
 }
 
-int close_window(t_data *data)
+void destroy_image(myvar *var)
+{
+    int i = -1;
+    while (++i < 4)
+      mlx_destroy_image(var->data->mlx, var->texturess[i].img);
+
+
+    mlx_destroy_image(var->data->mlx, var->texture_hands.img);
+
+}
+
+int close_window(myvar *data)
 {
 	(void)data;
-	// mlx_destroy_window(data->mlx, data->win);
+        garbage_collector(&data->list,free);
+	     mlx_destroy_window(data->data->mlx, data->data->win);
+        destroy_image(data);
+
 	exit(0);
 	return (0);
 }
 
-int key_press(int keycode, t_data *data)
+int key_press(int keycode, myvar *var)
 {
 	if(keycode == KEY_ESC)
-		close_window(data);
+		close_window(var);
 	// if (keycode < 256)
-	data->keys[keycode] = 1;
+	var->data->keys[keycode] = 1;
 	return 0;
 }
 
@@ -335,10 +348,10 @@ void detect_direc_player(myvar *var)
         i++;
     }
 }
-int get_texture_color(int type_wall, int x, int y)
+int get_texture_color(myvar *var ,int type_wall, int x, int y)
 {
 
-    char *pixel = textures[type_wall].addr + (y * textures[type_wall].line_length + x * 4);
+    char *pixel = var->texturess[type_wall].addr + (y * var->texturess[type_wall].line_length + x * 4);
     return *(unsigned int *)pixel;
 }
 
@@ -369,11 +382,11 @@ i = ray->draw_end;
 
 		 wall_x -= floor(wall_x);
 
-		int tex_x = (int)(wall_x * textures[ray->wall_orientation].width);
+		int tex_x = (int)(wall_x * var->texturess[ray->wall_orientation].width);
         while (y < ray->draw_end)
 		{
-          int tex_y  = ((y - ray->draw_start)* textures[ray->wall_orientation].height ) / ray->line_height;
-			 color = get_texture_color(ray->wall_orientation, tex_x, tex_y);
+          int tex_y  = ((y - ray->draw_start)* var->texturess[ray->wall_orientation].height ) / ray->line_height;
+			 color = get_texture_color(var,ray->wall_orientation, tex_x, tex_y);
 			my_mlx_pixel_put(data, x, y, color);
 			y++;
         }
@@ -491,16 +504,16 @@ void calcul_map_dimens(myvar *var)
 	var->data->map_cols = col;
 }
 
-int get_texture_hands_color(int x, int y) {
-    if (x >= 0 && x < texture_hands.width && y >= 0 && y < texture_hands.height) {
-        int offset = (y * texture_hands.line_length) + (x * (texture_hands.bits_per_pixel / 8));
-        return *(unsigned int *)(texture_hands.addr + offset);
+int get_texture_hands_color(myvar *var,int x, int y) {
+    if (x >= 0 && x < var->texture_hands.width && y >= 0 && y < var->texture_hands.height) {
+        int offset = (y * var->texture_hands.line_length) + (x * (var->texture_hands.bits_per_pixel / 8));
+        return *(unsigned int *)(var->texture_hands.addr + offset);
     } else {
         return 0xFF000000;
     }
 }
-    
-void draw_hands(t_data *data)
+
+void draw_hands(t_data *data , myvar *var)
 {
 
         int vertical_offset = 0;
@@ -512,7 +525,7 @@ void draw_hands(t_data *data)
         while (y < 630) {
             int x = 0;
             while (x < 630) {
-                unsigned int color = (unsigned int)get_texture_hands_color(x, y);
+                unsigned int color = (unsigned int)get_texture_hands_color(var,x, y);
             if (color != 0xFF000000)
             {
                     my_mlx_pixel_put(data, (screen_width - 650 + vertical_offset) / 2 + x,
@@ -555,7 +568,7 @@ int raycasting_loop(myvar *var)
 	}
 
     mlx_put_image_to_window(data->mlx, data->win, data->img, 0, 0);
-        draw_hands(data);
+        draw_hands(data,var);
     ft_draw_mini_map(var);
     handle_mouse(var);
 	mlx_do_sync(data->mlx);
@@ -585,16 +598,17 @@ void execute(myvar *var)
 	data->mlx = mlx_init();
 	data->win = mlx_new_window(data->mlx, screen_width, screen_height, "CUB3D");
     	  load_textures(data->mlx,var);
-
-         load_textures_hands(data->mlx);
-
+         load_textures_hands(data->mlx,var);
 	data->img = mlx_new_image(data->mlx, screen_width, screen_height);
 	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel, &data->line_length, &data->endian);
     setup_mouse(var);
-	mlx_hook(data->win, 2, 1L<<0, key_press, data);
+	mlx_hook(data->win, 2, 1L<<0, key_press, var);
 	mlx_hook(data->win, 3, 1L<<1, key_release, data);
-	mlx_hook(data->win, 17, 0, close_window, data);
+	mlx_hook(data->win, 17, 0, close_window, var);
 	mlx_loop_hook(data->mlx, raycasting_loop, var);
 	mlx_loop(data->mlx);
-    destroy(data);
+    destroy_image(var);
+
+      destroy(data);
+    
 }

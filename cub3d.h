@@ -139,6 +139,9 @@ typedef struct myvar
 	int floor;
 	int cel;
 	char *textures[4];
+	t_texture texturess[4];
+	t_texture texture_hands;
+
 
 }					myvar;
 

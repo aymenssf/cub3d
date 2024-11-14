@@ -57,6 +57,8 @@ void	init(myvar *var, int argc, char **argv)
 {
 	int	i;
 
+
+	memset(var->texturess,0,4*4);
 	i = -1;
 	while (++i < 4)
 		var->textures[i] = NULL;
