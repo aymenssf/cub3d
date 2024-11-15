@@ -6,11 +6,38 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 13:13:07 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/15 13:14:00 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/15 16:57:50 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./cub3d.h"
+
+int	is_wall(myvar *var, int x, int y)
+{
+	if (x < 0 || x >= var->data->map_cols || y < 0 || y >= var->data->map_rows)
+		return (1);
+	return (var->s[y][x] != '0');
+}
+
+double	get_time(void)
+{
+	struct timeval	tv;
+
+	gettimeofday(&tv, NULL);
+	return ((double)tv.tv_sec * 1000.0 + (double)tv.tv_usec / 1000.0);
+}
+
+void	destroy(t_data *data)
+{
+	mlx_destroy_image(data->mlx, data->img);
+	mlx_destroy_window(data->mlx, data->win);
+	mlx_loop_end(data->mlx);
+	mlx_clear_window(data->mlx, data->win);
+	mlx_destroy_display(data->mlx);
+	free(data->mlx);
+	free(data);
+	exit(0);
+}
 
 void	destroy_image(myvar *var)
 {

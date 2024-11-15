@@ -6,7 +6,7 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 12:40:14 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/15 13:20:18 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/15 16:57:01 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	handle_mouse(myvar *var)
 	double		old_plane_x;
 
 	if (!var || !var->data || !var->data->mlx || !var->data->win)
-		return (1);
+		return (garbage_collector(var, free), 1);
 	data = var->data;
 	if (first_time)
 	{
@@ -76,17 +76,4 @@ int	handle_mouse(myvar *var)
 		}
 	}
 	return (0);
-}
-
-void	setup_mouse(myvar *var)
-{
-	t_data	*data;
-
-	if (!var || !var->data || !var->data->mlx || !var->data->win)
-		return ;
-	data = var->data;
-	mlx_mouse_hide(data->mlx, data->win);
-	data->mouse_x = screen_width / 2;
-	data->mouse_y = screen_height / 2;
-	mlx_mouse_move(data->mlx, data->win, screen_width / 2, screen_height / 2);
 }
