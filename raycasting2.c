@@ -6,7 +6,7 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 16:58:26 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/15 17:00:08 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/15 17:46:27 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,9 +68,9 @@ void	dda_algo(t_ray *ray, myvar *var)
 			ray->map_x += ray->step_x;
 			ray->side = 0;
 			if (ray->step_x == -1)
-				ray->wall_orientation = 2; // W
+				ray->wall_orientation = 2;
 			else
-				ray->wall_orientation = 3; // E
+				ray->wall_orientation = 3;
 		}
 		else
 		{
@@ -78,9 +78,9 @@ void	dda_algo(t_ray *ray, myvar *var)
 			ray->map_y += ray->step_y;
 			ray->side = 1;
 			if (ray->step_y == -1)
-				ray->wall_orientation = 1; // N
+				ray->wall_orientation = 1;
 			else
-				ray->wall_orientation = 0; // S
+				ray->wall_orientation = 0;
 		}
 		if (is_wall(var, ray->map_x, ray->map_y))
 			ray->hit = 1;
@@ -90,13 +90,11 @@ void	dda_algo(t_ray *ray, myvar *var)
 void	draw_v_line(t_data *data, int x, t_ray *ray, myvar *var,
 		double ray_dir_x, double ray_dir_y)
 {
-	int		y;
 	int		color;
-	int		i;
 	double	wall_x;
-	int		tex_x;
-	int		tex_y;
 
+	int (y), (i);
+	int (tex_x), (tex_y);
 	y = ray->draw_start;
 	i = -1;
 	while (++i < y)

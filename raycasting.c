@@ -6,7 +6,7 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 16:42:28 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/15 16:59:05 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/15 17:45:12 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,21 +58,20 @@ static void	update_ray_position(double *ray_pos_x, double *ray_pos_y,
 void	draw_ray(myvar *var, t_data *data, double ray_dir_x, double ray_dir_y,
 		int color)
 {
-	int		tile_size;
 	double	ray_pos_x;
 	double	ray_pos_y;
 	double	delta_dist_x;
 	double	delta_dist_y;
-	int		hit;
 
+	int (hit), (tile_size);
+	int (step_x), (step_y);
+	double (side_dist_x), (side_dist_y);
 	tile_size = MAP_WIDTH / 20;
 	ray_pos_x = data->pos_x;
 	ray_pos_y = data->pos_y;
 	delta_dist_x = fabs(1 / ray_dir_x);
 	delta_dist_y = fabs(1 / ray_dir_y);
-	int step_x, step_y;
 	calculate_step_direction(ray_dir_x, ray_dir_y, &step_x, &step_y);
-	double side_dist_x, side_dist_y;
 	calculate_side_distances(ray_pos_x, ray_pos_y, delta_dist_x, delta_dist_y,
 		step_x, step_y, &side_dist_x, &side_dist_y);
 	hit = 0;
