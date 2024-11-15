@@ -416,7 +416,7 @@ int	raycasting_loop(myvar *var)
 	mlx_put_image_to_window(data->mlx, data->win, data->img, 0, 0);
 	draw_hands(data, var);
 	ft_draw_mini_map(var);
-	handle_mouse(var);
+	 handle_mouse(var);
 	mlx_do_sync(data->mlx);
 	return (0);
 }
@@ -436,7 +436,7 @@ void	execute(myvar *var)
 	data->img = mlx_new_image(data->mlx, screen_width, screen_height);
 	data->addr = mlx_get_data_addr(data->img, &data->bits_per_pixel,
 			&data->line_length, &data->endian);
-	setup_mouse(var);
+	//   setup_mouse(var);
 	mlx_hook(data->win, 2, 1L << 0, key_press, var);
 	mlx_hook(data->win, 3, 1L << 1, key_release, data);
 	mlx_hook(data->win, 17, 0, close_window, var);
