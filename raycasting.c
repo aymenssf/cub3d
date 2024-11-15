@@ -6,104 +6,80 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 16:42:28 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/15 17:45:12 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/15 23:12:36 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./cub3d.h"
 
-static void	calculate_side_distances(double ray_pos_x, double ray_pos_y,
-		double delta_dist_x, double delta_dist_y, int step_x, int step_y,
-		double *side_dist_x, double *side_dist_y)
+static void	calculate_side_distances(t_ray_calc *calc)
 {
-	if (step_x < 0)
-		*side_dist_x = (ray_pos_x - floor(ray_pos_x)) * delta_dist_x;
+	if (calc->step_x < 0)
+		calc->side_dist_x = (calc->ray_pos_x - floor(calc->ray_pos_x))
+			* calc->delta_dist_x;
 	else
-		*side_dist_x = (ceil(ray_pos_x) - ray_pos_x) * delta_dist_x;
-	if (step_y < 0)
-		*side_dist_y = (ray_pos_y - floor(ray_pos_y)) * delta_dist_y;
+		calc->side_dist_x = (ceil(calc->ray_pos_x) - calc->ray_pos_x)
+			* calc->delta_dist_x;
+	if (calc->step_y < 0)
+		calc->side_dist_y = (calc->ray_pos_y - floor(calc->ray_pos_y))
+			* calc->delta_dist_y;
 	else
-		*side_dist_y = (ceil(ray_pos_y) - ray_pos_y) * delta_dist_y;
+		calc->side_dist_y = (ceil(calc->ray_pos_y) - calc->ray_pos_y)
+			* calc->delta_dist_y;
 }
 
-static void	draw_ray_pixel(t_data *data, double ray_pos_x, double ray_pos_y,
-		int tile_size, int color)
+static void	draw_ray_pixel(t_data *data, t_ray_calc *calc, int tile_size,
+		int color)
 {
 	int	pixel_x;
 	int	pixel_y;
 
-	pixel_x = (int)(ray_pos_x * tile_size);
-	pixel_y = (int)(ray_pos_y * tile_size);
+	pixel_x = (int)(calc->ray_pos_x * tile_size);
+	pixel_y = (int)(calc->ray_pos_y * tile_size);
 	if (pixel_x >= 0 && pixel_x < MAP_WIDTH && pixel_y >= 0
 		&& pixel_y < MAP_WIDTH)
 		my_mlx_pixel_put(data, pixel_x, pixel_y, color);
 }
 
-static void	update_ray_position(double *ray_pos_x, double *ray_pos_y,
-		double *side_dist_x, double *side_dist_y, double delta_dist_x,
-		double delta_dist_y, int step_x, int step_y)
+static void	update_ray_position(t_ray_calc *calc)
 {
-	if (*side_dist_x < *side_dist_y)
+	if (calc->side_dist_x < calc->side_dist_y)
 	{
-		*side_dist_x += delta_dist_x;
-		*ray_pos_x += step_x;
+		calc->side_dist_x += calc->delta_dist_x;
+		calc->ray_pos_x += calc->step_x;
 	}
 	else
 	{
-		*side_dist_y += delta_dist_y;
-		*ray_pos_y += step_y;
+		calc->side_dist_y += calc->delta_dist_y;
+		calc->ray_pos_y += calc->step_y;
 	}
 }
 
-void	draw_ray(myvar *var, t_data *data, double ray_dir_x, double ray_dir_y,
-		int color)
+void	init_ray_calc(t_ray_calc *calc, t_data *data)
 {
-	double	ray_pos_x;
-	double	ray_pos_y;
-	double	delta_dist_x;
-	double	delta_dist_y;
+	calc->ray_pos_x = data->pos_x;
+	calc->ray_pos_y = data->pos_y;
+	calc->delta_dist_x = fabs(1 / data->ray_dir_x);
+	calc->delta_dist_y = fabs(1 / data->ray_dir_y);
+	calculate_step_direction(data->ray_dir_x, data->ray_dir_y, &calc->step_x,
+		&calc->step_y);
+	calculate_side_distances(calc);
+}
 
-	int (hit), (tile_size);
-	int (step_x), (step_y);
-	double (side_dist_x), (side_dist_y);
+void	draw_ray(myvar *var, t_data *data, int color)
+{
+	t_ray_calc	calc;
+	int			hit;
+	int			tile_size;
+
 	tile_size = MAP_WIDTH / 20;
-	ray_pos_x = data->pos_x;
-	ray_pos_y = data->pos_y;
-	delta_dist_x = fabs(1 / ray_dir_x);
-	delta_dist_y = fabs(1 / ray_dir_y);
-	calculate_step_direction(ray_dir_x, ray_dir_y, &step_x, &step_y);
-	calculate_side_distances(ray_pos_x, ray_pos_y, delta_dist_x, delta_dist_y,
-		step_x, step_y, &side_dist_x, &side_dist_y);
+	init_ray_calc(&calc, data);
 	hit = 0;
 	while (!hit)
 	{
-		draw_ray_pixel(data, ray_pos_x, ray_pos_y, tile_size, color);
-		update_ray_position(&ray_pos_x, &ray_pos_y, &side_dist_x, &side_dist_y,
-			delta_dist_x, delta_dist_y, step_x, step_y);
-		if (is_wall(var, (int)ray_pos_x, (int)ray_pos_y))
+		draw_ray_pixel(data, &calc, tile_size, color);
+		update_ray_position(&calc);
+		if (is_wall(var, (int)calc.ray_pos_x, (int)calc.ray_pos_y))
 			hit = 1;
 	}
-}
-
-void	calcul_map_dimens(myvar *var)
-{
-	int	row;
-	int	col;
-	int	i;
-	int	line_length;
-
-	row = 0;
-	col = 0;
-	while (var->s[row])
-		row++;
-	i = 0;
-	while (i < row)
-	{
-		line_length = ft_strlen(var->s[i]);
-		if (line_length > col)
-			col = line_length;
-		i++;
-	}
-	var->data->map_rows = row;
-	var->data->map_cols = col;
 }

@@ -6,7 +6,7 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 13:05:04 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/15 13:18:20 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/15 23:14:28 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,5 @@ void	read_keys(myvar *var)
 	if (key_down(data, KEY_LEFT))
 		hdl_l_rot(data);
 	if (key_down(data, KEY_ESC))
-		// close_window(var);
 		destroy(data);
 }

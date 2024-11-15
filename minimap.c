@@ -6,7 +6,7 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 22:48:10 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/12 22:48:12 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/15 23:19:26 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,14 +42,16 @@ void	draw_mini_square(t_data *data, double x, double y, int color)
 	float	alpha;
 	int		rounded_x;
 	int		rounded_y;
+	int		i;
+	int		j;
 
 	alpha = 0.65f;
 	rounded_x = (int)(x);
 	rounded_y = (int)(y);
-	int i = 0;
+	i = 0;
 	while (i < TILE_SIZE)
 	{
-		int j = 0;
+		j = 0;
 		while (j < TILE_SIZE)
 		{
 			if (rounded_x + i < screen_width && rounded_y + j < screen_height
@@ -69,16 +71,18 @@ void	draw_mini_player(t_data *data, double x, double y)
 	int		color;
 	int		rounded_x;
 	int		rounded_y;
+	int		i;
+	int		j;
 
 	player_size = 6;
 	alpha = 0.9f;
 	color = 0xFF0000;
 	rounded_x = (int)(x - player_size / 2);
 	rounded_y = (int)(y - player_size / 2);
-	int i = 0;
+	i = 0;
 	while (i < player_size)
 	{
-		int j = 0;
+		j = 0;
 		while (j < player_size)
 		{
 			if (rounded_x + i < screen_width && rounded_y + j < screen_height
@@ -103,14 +107,16 @@ void	draw_filled_fov(myvar *var, double start_x, double start_y,
 	double	y;
 	int		rounded_x;
 	int		rounded_y;
+	double	angle;
+	double	r;
 
 	color = 0x00FF00;
 	alpha = 0.1f;
 	angle_step = 0.02;
-	double angle = start_angle;
+	angle = start_angle;
 	while (angle <= end_angle)
 	{
-		double r = 0;
+		r = 0;
 		while (r <= radius)
 		{
 			x = start_x + (cos(angle) * r);
@@ -167,6 +173,8 @@ void	ft_draw_mini_map(myvar *var)
 	double	player_angle;
 	double	start_angle;
 	double	end_angle;
+	int		y;
+	int		x;
 
 	data = var->data;
 	player_x = data->pos_x;
@@ -175,10 +183,10 @@ void	ft_draw_mini_map(myvar *var)
 	offset_y = (player_y - floor(player_y)) * TILE_SIZE;
 	base_x = (int)floor(player_x) - MINI_MAP_SIZE;
 	base_y = (int)floor(player_y) - MINI_MAP_SIZE;
-	int y = 0;
+	y = 0;
 	while (y <= MINI_MAP_SIZE * 2)
 	{
-		int x = 0;
+		x = 0;
 		while (x <= MINI_MAP_SIZE * 2)
 		{
 			map_x = base_x + x;

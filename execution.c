@@ -6,7 +6,7 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 19:40:26 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/15 16:58:12 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/15 22:29:28 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,19 +62,13 @@ void	calcul_wall_dist(t_data *data, t_ray *ray, double ray_dir_x,
 int	raycasting_loop(myvar *var)
 {
 	t_data	*data;
-	double	time;
-	double	frame_time;
 	int		x;
 	t_ray	ray;
 	double	ray_dir_x;
 	double	ray_dir_y;
 
 	data = var->data;
-	time = get_time();
-	frame_time = (time - data->old_time) / 1000.0;
-	data->old_time = time;
-	data->move_speed = frame_time * 1.5;
-	data->rot_speed = frame_time * 1.5;
+	update_frame_data(data);
 	read_keys(var);
 	memset(data->addr, 0, screen_width * screen_height * (data->bits_per_pixel
 			/ 8));
@@ -87,14 +81,10 @@ int	raycasting_loop(myvar *var)
 		calculate_dist(data, &ray, ray_dir_x, ray_dir_y);
 		dda_algo(&ray, var);
 		calcul_wall_dist(data, &ray, ray_dir_x, ray_dir_y);
-		draw_v_line(data, x, &ray, var, ray_dir_x, ray_dir_y);
+		draw_v_line(data, x, &ray, var);
 		x++;
 	}
-	mlx_put_image_to_window(data->mlx, data->win, data->img, 0, 0);
-	draw_hands(data, var);
-	ft_draw_mini_map(var);
-	 handle_mouse(var);
-	mlx_do_sync(data->mlx);
+	update_display(data, var);
 	return (0);
 }
 

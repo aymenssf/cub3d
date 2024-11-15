@@ -6,7 +6,7 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 12:40:14 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/15 16:57:01 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/15 23:21:20 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,8 @@ int	handle_mouse(myvar *var)
 	static int	prev_x = -1;
 	int			hold;
 	double		rotation_speed;
-	double		old_dir_x;
-	double		old_plane_x;
 
+	double (old_dir_x), (old_plane_x);
 	if (!var || !var->data || !var->data->mlx || !var->data->win)
 		return (garbage_collector(var, free), 1);
 	data = var->data;

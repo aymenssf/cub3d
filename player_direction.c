@@ -6,21 +6,13 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 16:44:07 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/15 16:44:29 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/15 23:15:32 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./cub3d.h"
 
-static void	init_N(myvar *var)
-{
-	var->data->dir_x = 0;
-	var->data->dir_y = -1;
-	var->data->plane_x = 0.66;
-	var->data->plane_y = 0;
-}
-
-static void	init_S(myvar *var)
+static void	init_s(myvar *var)
 {
 	var->data->dir_x = 0;
 	var->data->dir_y = 1;
@@ -28,7 +20,7 @@ static void	init_S(myvar *var)
 	var->data->plane_y = 0;
 }
 
-static void	init_E(myvar *var)
+static void	init_e(myvar *var)
 {
 	var->data->dir_x = 1;
 	var->data->dir_y = 0;
@@ -36,7 +28,7 @@ static void	init_E(myvar *var)
 	var->data->plane_y = 0.66;
 }
 
-static void	init_W(myvar *var)
+static void	init_w(myvar *var)
 {
 	var->data->dir_x = -1;
 	var->data->dir_y = 0;
@@ -47,18 +39,23 @@ static void	init_W(myvar *var)
 static void	set_direc_player(myvar *var, char direc)
 {
 	if (direc == 'N')
-		init_N(var);
+	{
+		var->data->dir_x = 0;
+		var->data->dir_y = -1;
+		var->data->plane_x = 0.66;
+		var->data->plane_y = 0;
+	}
 	else if (direc == 'S')
-		init_S(var);
+		init_s(var);
 	else if (direc == 'E')
-		init_E(var);
+		init_e(var);
 	else if (direc == 'W')
-		init_W(var);
+		init_w(var);
 }
 
 void	detect_direc_player(myvar *var)
 {
-	int(i), (j);
+	int (i), (j);
 	i = 0;
 	while (var->s[i])
 	{

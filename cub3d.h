@@ -6,7 +6,7 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 11:47:45 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/15 17:02:10 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/15 23:11:40 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,8 @@ typedef struct s_data
 	int				color;
 	int				mouse_x;
 	int				mouse_y;
+	double			ray_dir_x;
+	double			ray_dir_y;
 }					t_data;
 
 typedef struct s_texture
@@ -142,6 +144,18 @@ typedef struct myvar
 	t_texture		texture_hands;
 
 }					myvar;
+
+typedef struct s_ray_calc
+{
+	double			ray_pos_x;
+	double			ray_pos_y;
+	double			delta_dist_x;
+	double			delta_dist_y;
+	double			side_dist_x;
+	double			side_dist_y;
+	int				step_x;
+	int				step_y;
+}					t_ray_calc;
 
 typedef struct s_ray
 {
@@ -223,9 +237,11 @@ void				calculate_dist(t_data *data, t_ray *ray, double ray_dir_x,
 						double ray_dir_y);
 void				dda_algo(t_ray *ray, myvar *var);
 int					is_wall(myvar *var, int x, int y);
-void	draw_v_line(t_data *data, int x, t_ray *ray, myvar *var,
-		double ray_dir_x, double ray_dir_y);
-void	calculate_step_direction(double ray_dir_x, double ray_dir_y,
-		int *step_x, int *step_y);
+void				draw_v_line(t_data *data, int x, t_ray *ray, myvar *var);
+void				calculate_step_direction(double ray_dir_x, double ray_dir_y,
+						int *step_x, int *step_y);
+void				update_frame_data(t_data *data);
+void				update_display(t_data *data, myvar *var);
+void				init_ray_calc(t_ray_calc *calc, t_data *data);
 
 #endif
