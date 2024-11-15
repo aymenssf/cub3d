@@ -6,7 +6,7 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 11:47:45 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/14 13:51:14 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/15 13:18:20 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,11 +201,23 @@ int check_extension(char *str ,char *s);
 void execute(myvar *var);
 void calcul_map_dimens(myvar *var);
 void my_mlx_pixel_put(t_data *data, int x, int y, int color);
-void	draw_2d_map(myvar *var);
 void	store_to_textures(myvar *var, char *s);
 int create_rgb(int r , int g , int b);
 void ft_draw_mini_map(myvar *var);
 void setup_mouse(myvar *var);
 int handle_mouse(myvar *var);
 void destroy(t_data *data);
+int	get_texture_color(myvar *var, int type_wall, int x, int y);
+void	load_textures_hands(void *mlx, myvar *var);
+void	load_textures(void *mlx, myvar *var);
+void	draw_hands(t_data *data, myvar *var);
+int	get_texture_hands_color(myvar *var, int x, int y);
+void	destroy_image(myvar *var);
+double	get_time(void);
+int	key_press(int keycode, myvar *var);
+int	key_release(int keycode, t_data *data);
+int	key_down(t_data *data, int keycode);
+void	read_keys(myvar *var);
+int	is_valid_position(myvar *var, double x, double y);
+int close_window(myvar *data);
 #endif

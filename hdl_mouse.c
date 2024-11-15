@@ -6,7 +6,7 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 12:40:14 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/14 14:05:36 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/15 13:20:18 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ int	handle_mouse(myvar *var)
 	if (!var || !var->data || !var->data->mlx || !var->data->win)
 		return (1);
 	data = var->data;
-			mlx_mouse_hide(data->mlx, data->win);
 	if (first_time)
 	{
 		mlx_mouse_move(data->mlx, data->win, screen_width / 2, screen_height
@@ -55,7 +54,7 @@ int	handle_mouse(myvar *var)
 	{
 		if (hold != 0)
 		{
-			rotation_speed = (double)(abs(hold)) * 0.002;
+			rotation_speed = (double)(abs(hold)) *0.002;
 			if (hold < 0)
 				rotation_speed = -rotation_speed;
 			old_dir_x = data->dir_x;
@@ -86,9 +85,8 @@ void	setup_mouse(myvar *var)
 	if (!var || !var->data || !var->data->mlx || !var->data->win)
 		return ;
 	data = var->data;
-	// mlx_mouse_hide(data->mlx, data->win);
+	mlx_mouse_hide(data->mlx, data->win);
 	data->mouse_x = screen_width / 2;
 	data->mouse_y = screen_height / 2;
 	mlx_mouse_move(data->mlx, data->win, screen_width / 2, screen_height / 2);
-	// mlx_hook(data->win, 6, 1L<<6, handle_mouse, var);
 }
