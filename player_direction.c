@@ -6,13 +6,13 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 16:44:07 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/16 22:00:23 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/16 22:01:54 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./cub3d.h"
 
-static void	init_s(myvar *var)
+static void	init_n(myvar *var)
 {
 	var->data->dir_x = 0;
 	var->data->dir_y = 1;
@@ -46,7 +46,7 @@ static void	set_direc_player(myvar *var, char direc)
 		var->data->plane_y = 0;
 	}
 	else if (direc == 'N')
-		init_s(var);
+		init_n(var);
 	else if (direc == 'E')
 		init_e(var);
 	else if (direc == 'W')
