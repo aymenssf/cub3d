@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   helper_functions.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yaboulan <yaboulan@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/16 04:48:24 by yaboulan          #+#    #+#             */
+/*   Updated: 2024/11/16 04:49:42 by yaboulan         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../cub3d.h"
 
 char	*some(int *i, char *line)
@@ -35,7 +47,7 @@ char	*get_next_line(int fd)
 	return (some(&i, line));
 }
 
-int	find_direction(myvar *var ,player *player, char **mini_map)
+int	find_direction(myvar *var, player *player, char **mini_map)
 {
 	int	i;
 	int	j;
@@ -56,11 +68,11 @@ int	find_direction(myvar *var ,player *player, char **mini_map)
 			}
 			else if (mini_map[i][j] != ' ' && mini_map[i][j] != '0'
 					&& mini_map[i][j] != '1')
-				return (store_to_error(&var->error,"Wrong caracter"),1);
+				return (store_to_error(&var->error, "Wrong caracter"), 1);
 		}
 	}
 	if (flag != 1)
-		return (store_to_error(&var->error,"On Player"),1);
+		return (store_to_error(&var->error, "On Player"), 1);
 	return (0);
 }
 

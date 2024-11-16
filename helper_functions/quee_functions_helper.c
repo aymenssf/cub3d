@@ -1,11 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   quee_functions_helper.c                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yaboulan <yaboulan@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/16 04:55:03 by yaboulan          #+#    #+#             */
+/*   Updated: 2024/11/16 04:57:09 by yaboulan         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../cub3d.h"
 
-int create_rgb(int r , int g , int b)
+int	create_rgb(int r, int g, int b)
 {
-	return (r << 16 | g << 8 | b );
+	return (r << 16 | g << 8 | b);
 }
 
-void store_to_error(char **s , char *error)
+void	store_to_error(char **s, char *error)
 {
 	if(*s[0] == 0)
 		*s = error;

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   helper_functions1.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yaboulan <yaboulan@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/16 04:50:01 by yaboulan          #+#    #+#             */
+/*   Updated: 2024/11/16 04:53:11 by yaboulan         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../cub3d.h"
 
 void	check_s2(char c, int *check, myvar *var)
@@ -28,17 +40,14 @@ char	**map_to_s(char *s, int count, myvar *var)
 	while (s[++i])
 		check_s2(s[i], &check, var);
 	str = ft_split(s, '\n');
-	if(str == NULL)
+	if(!str)
 	{
 		printf("Error Missed CUB \n");
 		garbage_collector(var, free);
 		exit(1);
 	}
-
 	add_to_listt(str, &var->list);
-
 	mylist(str, &var->list);
-
 	return (str);
 }
 
@@ -68,8 +77,9 @@ void	mylist(void *node, listt **nodee)
 void	garbage_collector(myvar *var, void (*del)(void *))
 {
 	listt	*temp;
-	listt **lst = &var->list;
+	listt	**lst;
 
+	lst = &var->list;
 	if (!lst)
 		return ;
 	while (*lst)
