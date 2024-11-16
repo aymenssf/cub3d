@@ -6,7 +6,7 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 16:58:26 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/16 21:41:21 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/16 21:42:57 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,14 +83,8 @@ void	draw_floor_ceiling(t_data *data, int x, t_ray *ray, myvar *var)
 
 void	draw_wall_texture(t_data *data, int x, t_ray *ray, myvar *var)
 {
-	double	wall_x;
-	int		tex_x;
-	int		tex_y;
-	int		y;
-	int		color;
-	double	step;
-	double	tex_pos;
-
+	int (tex_x), (tex_y), (y), (color);
+	double (step), (tex_pos), (wall_x);
 	if (ray->side == 0)
 		wall_x = data->pos_y + ray->perp_wall_dist * data->ray_dir_y;
 	else
