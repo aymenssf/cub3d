@@ -6,7 +6,7 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 11:47:45 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/15 23:11:40 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/16 21:39:31 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,7 @@ typedef struct s_data
 	int				keys[65536];
 	unsigned int	*dst;
 	int				color;
+	int				color_mini;
 	int				mouse_x;
 	int				mouse_y;
 	double			ray_dir_x;
@@ -143,7 +144,11 @@ typedef struct myvar
 	char			*textures[4];
 	t_texture		texturess[4];
 	t_texture		texture_hands;
-
+	int				radius;
+	int				offset_x;
+	int				offset_y;
+	int				base_x;
+	int				base_y;
 }					myvar;
 
 typedef struct s_ray_calc
@@ -245,5 +250,7 @@ void				calculate_step_direction(double ray_dir_x, double ray_dir_y,
 void				update_frame_data(t_data *data);
 void				update_display(t_data *data, myvar *var);
 void				init_ray_calc(t_ray_calc *calc, t_data *data);
-
+void				draw_filled_fov(myvar *var, double center_pos[2]);
+int					get_map_color(char tile);
+void				my_mlx_pixel_put_transparent(t_data *data, int x, int y, float alpha);
 #endif

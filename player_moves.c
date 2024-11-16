@@ -6,7 +6,7 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 13:05:04 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/15 23:14:28 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/16 18:52:47 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static void	hdl_up_down(t_data *data, double *new_pos_x, double *new_pos_y)
 {
 	double	move_step;
 
-	move_step = data->move_speed * 3.0;
+	move_step = data->move_speed * 1.0;
 	if (key_down(data, KEY_UP) || key_down(data, KEY_W))
 	{
 		*new_pos_x += data->dir_x * move_step;
@@ -33,7 +33,7 @@ static void	hdl_strafe(t_data *data, double *new_pos_x, double *new_pos_y)
 {
 	double	strafe_step;
 
-	strafe_step = data->move_speed * 1.5;
+	strafe_step = data->move_speed * 1;
 	if (key_down(data, KEY_D))
 	{
 		*new_pos_x -= data->plane_x * strafe_step;

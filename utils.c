@@ -6,7 +6,7 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 13:13:07 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/15 16:57:50 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/16 21:15:44 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 int	is_wall(myvar *var, int x, int y)
 {
-	if (x < 0 || x >= var->data->map_cols || y < 0 || y >= var->data->map_rows)
+	if (x < 0 || x >= var->data->map_cols || y < 0 || y >= var->data->map_rows
+		|| (size_t)y >= ft_strlen(var->s[y]))
 		return (1);
 	return (var->s[y][x] != '0');
 }
