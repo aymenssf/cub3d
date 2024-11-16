@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   helper_functions2.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/16 22:04:06 by aassaf            #+#    #+#             */
+/*   Updated: 2024/11/16 22:36:57 by aassaf           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../cub3d.h"
 
-void	store_to_textures(myvar *var, char *s)
+void	store_to_textures(t_myvar *var, char *s)
 {
 	int	i;
 
@@ -36,7 +48,7 @@ int	check_len(char **s)
 	return (i);
 }
 
-int	check_map2(char **s , myvar *var)
+int	check_map2(char **s, t_myvar *var)
 {
 	int	i;
 	int	j;
@@ -52,7 +64,8 @@ int	check_map2(char **s , myvar *var)
 		while (s[i][++j])
 		{
 			if (simple_check(i, j, s, check))
-				return (store_to_error(&var->error,"Look At your Map Invalid Format"),1);
+				return (store_to_error(&var->error,
+						"Look At your Map Invalid Format"), 1);
 		}
 		if (i == check)
 			return (0);
@@ -60,12 +73,12 @@ int	check_map2(char **s , myvar *var)
 	return (0);
 }
 
-void	add_nodee(char *name, list **listo, listt **liste)
+void	add_nodee(char *name, t_liist **listo, t_listt **liste)
 {
-	list	*test;
-	list	*head;
+	t_liist	*test;
+	t_liist	*head;
 
-	test = malloc(sizeof(list));
+	test = malloc(sizeof(t_liist));
 	if (!test)
 		return ;
 	if (!(*listo))
@@ -89,7 +102,7 @@ void	add_nodee(char *name, list **listo, listt **liste)
 	}
 }
 
-int	check_ss(char *line, listt **node)
+int	check_ss(char *line, t_listt **node)
 {
 	int	check;
 

@@ -6,13 +6,13 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 12:59:05 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/15 13:04:18 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/16 22:15:21 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./cub3d.h"
 
-void	load_textures_hands(void *mlx, myvar *var)
+void	load_textures_hands(void *mlx, t_myvar *var)
 {
 	var->texture_hands.img = mlx_xpm_file_to_image(mlx, "file.xpm",
 			&var->texture_hands.width, &var->texture_hands.height);
@@ -21,7 +21,7 @@ void	load_textures_hands(void *mlx, myvar *var)
 			&var->texture_hands.endian);
 }
 
-void	load_textures(void *mlx, myvar *var)
+void	load_textures(void *mlx, t_myvar *var)
 {
 	int	i;
 
@@ -36,7 +36,7 @@ void	load_textures(void *mlx, myvar *var)
 	}
 }
 
-void	draw_hands(t_data *data, myvar *var)
+void	draw_hands(t_data *data, t_myvar *var)
 {
 	int				vertical_offset;
 	int				y;
@@ -55,8 +55,8 @@ void	draw_hands(t_data *data, myvar *var)
 			color = (unsigned int)get_texture_hands_color(var, x, y);
 			if (color != 0xFF000000)
 			{
-				my_mlx_pixel_put(data, (screen_width - 650 + vertical_offset)
-					/ 2 + x, (screen_height - 370 + vertical_offset) + y,
+				my_mlx_pixel_put(data, (SCREEN_WIDTH - 650 + vertical_offset)
+					/ 2 + x, (SCREEN_HEIGHT - 370 + vertical_offset) + y,
 					color);
 			}
 			x++;
@@ -65,7 +65,7 @@ void	draw_hands(t_data *data, myvar *var)
 	}
 }
 
-int	get_texture_color(myvar *var, int type_wall, int x, int y)
+int	get_texture_color(t_myvar *var, int type_wall, int x, int y)
 {
 	char	*pixel;
 
@@ -74,7 +74,7 @@ int	get_texture_color(myvar *var, int type_wall, int x, int y)
 	return (*(unsigned int *)pixel);
 }
 
-int	get_texture_hands_color(myvar *var, int x, int y)
+int	get_texture_hands_color(t_myvar *var, int x, int y)
 {
 	int	offset;
 

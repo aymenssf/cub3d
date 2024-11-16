@@ -6,7 +6,7 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 16:42:28 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/15 23:12:36 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/16 22:15:21 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void	init_ray_calc(t_ray_calc *calc, t_data *data)
 	calculate_side_distances(calc);
 }
 
-void	draw_ray(myvar *var, t_data *data, int color)
+void	draw_ray(t_myvar *var, t_data *data, int color)
 {
 	t_ray_calc	calc;
 	int			hit;

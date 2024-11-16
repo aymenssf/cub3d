@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   helper_functions.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yaboulan <yaboulan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 04:48:24 by yaboulan          #+#    #+#             */
-/*   Updated: 2024/11/16 04:49:42 by yaboulan         ###   ########.fr       */
+/*   Updated: 2024/11/16 22:25:08 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ char	*get_next_line(int fd)
 	return (some(&i, line));
 }
 
-int	find_direction(myvar *var, player *player, char **mini_map)
+int	find_direction(t_myvar *var, t_player *player, char **mini_map)
 {
 	int	i;
 	int	j;

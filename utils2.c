@@ -6,7 +6,7 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 21:50:05 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/15 21:50:24 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/16 22:15:21 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	update_frame_data(t_data *data)
 	data->old_time = time;
 }
 
-void	update_display(t_data *data, myvar *var)
+void	update_display(t_data *data, t_myvar *var)
 {
 	mlx_put_image_to_window(data->mlx, data->win, data->img, 0, 0);
 	draw_hands(data, var);
@@ -30,5 +30,3 @@ void	update_display(t_data *data, myvar *var)
 	handle_mouse(var);
 	mlx_do_sync(data->mlx);
 }
-
-

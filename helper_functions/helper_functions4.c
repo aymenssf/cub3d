@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   helper_functions4.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yaboulan <yaboulan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 04:53:42 by yaboulan          #+#    #+#             */
-/*   Updated: 2024/11/16 04:53:43 by yaboulan         ###   ########.fr       */
+/*   Updated: 2024/11/16 22:24:21 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int	simple_check(int i, int j, char **s, int check)
 	return (0);
 }
 
-void	store_line(char **line, myvar *var, char **s)
+void	store_line(char **line, t_myvar *var, char **s)
 {
 	mylist(*line, &(var->list));
 	*s = ft_strjoin(*s, *line);
@@ -65,9 +65,9 @@ void	store_line(char **line, myvar *var, char **s)
 	*line = get_next_line(var->fd);
 }
 
-void	add_node_list(char *name, list **listo, int *countt, myvar *var)
+void	add_node_list(char *name, t_liist **listo, int *countt, t_myvar *var)
 {
-	list	*head;
+	t_liist	*head;
 
 	head = *listo;
 	while ((head))

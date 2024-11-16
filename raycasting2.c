@@ -6,7 +6,7 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 16:58:26 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/16 21:49:48 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/16 22:15:21 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	calculate_dist(t_data *data, t_ray *ray, double ray_dir_x,
 	}
 }
 
-void	dda_algo(t_ray *ray, myvar *var)
+void	dda_algo(t_ray *ray, t_myvar *var)
 {
 	while (!ray->hit)
 	{
@@ -66,7 +66,7 @@ void	dda_algo(t_ray *ray, myvar *var)
 	}
 }
 
-void	draw_floor_ceiling(t_data *data, int x, t_ray *ray, myvar *var)
+void	draw_floor_ceiling(t_data *data, int x, t_ray *ray, t_myvar *var)
 {
 	int	i;
 
@@ -74,14 +74,14 @@ void	draw_floor_ceiling(t_data *data, int x, t_ray *ray, myvar *var)
 	while (++i < ray->draw_start)
 		my_mlx_pixel_put(data, x, i, var->floor);
 	i = ray->draw_end;
-	while (i < screen_height)
+	while (i < SCREEN_HEIGHT)
 	{
 		my_mlx_pixel_put(data, x, i, var->cel);
 		i++;
 	}
 }
 
-void	draw_wall_texture(t_data *data, int x, t_ray *ray, myvar *var)
+void	draw_wall_texture(t_data *data, int x, t_ray *ray, t_myvar *var)
 {
 	int (tex_x), (tex_y), (y), (color);
 	double (step), (tex_pos), (wall_x);
@@ -97,7 +97,7 @@ void	draw_wall_texture(t_data *data, int x, t_ray *ray, myvar *var)
 		tex_x = var->texturess[ray->wall_orientation].width - tex_x - 1;
 	step = 1.0 * var->texturess[ray->wall_orientation].height
 		/ ray->line_height;
-	tex_pos = (ray->draw_start - screen_height / 2 + ray->line_height / 2)
+	tex_pos = (ray->draw_start - SCREEN_HEIGHT / 2 + ray->line_height / 2)
 		* step;
 	y = ray->draw_start;
 	while (y < ray->draw_end)
@@ -111,7 +111,7 @@ void	draw_wall_texture(t_data *data, int x, t_ray *ray, myvar *var)
 	}
 }
 
-void	draw_v_line(t_data *data, int x, t_ray *ray, myvar *var)
+void	draw_v_line(t_data *data, int x, t_ray *ray, t_myvar *var)
 {
 	draw_floor_ceiling(data, x, ray, var);
 	if (ray->map_y < 0 || ray->map_y >= var->data->map_rows || ray->map_x < 0

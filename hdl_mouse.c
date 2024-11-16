@@ -6,7 +6,7 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 12:40:14 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/16 21:58:58 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/16 22:15:21 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,23 +19,23 @@ static void	handle_mouse_position(t_data *data)
 		data->mouse_x = 50;
 		mlx_mouse_move(data->mlx, data->win, data->mouse_x, data->mouse_y);
 	}
-	else if (data->mouse_x > screen_width - 50)
+	else if (data->mouse_x > SCREEN_WIDTH - 50)
 	{
-		data->mouse_x = screen_width - 50;
+		data->mouse_x = SCREEN_WIDTH - 50;
 		mlx_mouse_move(data->mlx, data->win, data->mouse_x, data->mouse_y);
 	}
-	if (data->mouse_x < 50 || data->mouse_x > screen_width - 50)
+	if (data->mouse_x < 50 || data->mouse_x > SCREEN_WIDTH - 50)
 	{
-		mlx_mouse_move(data->mlx, data->win, screen_width / 2, data->mouse_y);
-		data->mouse_x = screen_width / 2;
+		mlx_mouse_move(data->mlx, data->win, SCREEN_WIDTH / 2, data->mouse_y);
+		data->mouse_x = SCREEN_WIDTH / 2;
 	}
 }
 
 static void	update_view(t_data *data, int hold)
 {
 	double (old_dir_x), (old_plane_x), (rotation_speed);
-	if (hold == 0 || !(data->mouse_x > 0 && data->mouse_x < screen_width
-			&& data->mouse_y > 0 && data->mouse_y < screen_height))
+	if (hold == 0 || !(data->mouse_x > 0 && data->mouse_x < SCREEN_WIDTH
+			&& data->mouse_y > 0 && data->mouse_y < SCREEN_HEIGHT))
 		return ;
 	rotation_speed = (double)(abs(hold))*0.002;
 	if (hold < 0)
@@ -52,7 +52,7 @@ static void	update_view(t_data *data, int hold)
 		* cos(rotation_speed);
 }
 
-int	handle_mouse(myvar *var)
+int	handle_mouse(t_myvar *var)
 {
 	t_data		*data;
 	static int	first_time = 1;
@@ -64,10 +64,10 @@ int	handle_mouse(myvar *var)
 	data = var->data;
 	if (first_time)
 	{
-		mlx_mouse_move(data->mlx, data->win, screen_width / 2, screen_height
+		mlx_mouse_move(data->mlx, data->win, SCREEN_WIDTH / 2, SCREEN_HEIGHT
 			/ 2);
-		data->mouse_x = screen_width / 2;
-		data->mouse_y = screen_height / 2;
+		data->mouse_x = SCREEN_WIDTH / 2;
+		data->mouse_y = SCREEN_HEIGHT / 2;
 		first_time = 0;
 		return (0);
 	}

@@ -6,7 +6,7 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 11:47:45 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/16 21:39:31 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/16 22:37:50 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,8 @@
 
 # define MINI_MAP_SIZE 5
 # define TILE_SIZE 16
-# define screen_width 1200
-# define screen_height 720
+# define SCREEN_WIDTH 1200
+# define SCREEN_HEIGHT 720
 # define MAP_HEIGHT 24
 # define MAP_WIDTH 240
 
@@ -54,15 +54,7 @@ typedef struct player
 	int				x;
 	int				y;
 	int				visited;
-}					player;
-
-typedef struct queue
-{
-	int				x;
-	int				y;
-	int				visited;
-	struct queue	*next;
-}					queue;
+}					t_player;
 
 typedef struct my_map
 {
@@ -70,20 +62,20 @@ typedef struct my_map
 	char			**floor;
 	char			**map;
 	int				tab[5];
-}					my_map;
+}					t_map;
 
 typedef struct list
 {
 	int				value;
 	char			*name;
 	struct list		*next;
-}					list;
+}					t_liist;
 
 typedef struct listt
 {
 	void			*node;
 	struct listt	*next;
-}					listt;
+}					t_listt;
 
 typedef struct s_data
 {
@@ -129,15 +121,15 @@ typedef struct s_texture
 typedef struct myvar
 {
 	t_data			*data;
-	listt			*list;
-	my_map			map;
+	t_listt			*list;
+	t_map			map;
 	char			**s;
 	int				count;
 	int				map_offset;
 	int				i;
 	int				fd;
 	char			*str;
-	player			player;
+	t_player		player;
 	int				floor;
 	int				cel;
 	char			*error;
@@ -149,7 +141,7 @@ typedef struct myvar
 	int				offset_y;
 	int				base_x;
 	int				base_y;
-}					myvar;
+}					t_myvar;
 
 typedef struct s_ray_calc
 {
@@ -184,73 +176,75 @@ typedef struct s_ray
 }					t_ray;
 
 char				*get_next_line(int fd);
-int	find_direction(myvar *var ,player *player, char **mini_map);
-char				**map_to_s(char *s, int count, myvar *var);
-void				mylist(void *node, listt **nodee);
-void				garbage_collector(myvar *var, void (*del)(void *));
-void				add_to_listt(char **ss, listt **node);
+int					find_direction(t_myvar *var, t_player *player,
+						char **mini_map);
+char				**map_to_s(char *s, int count, t_myvar *var);
+void				mylist(void *node, t_listt **nodee);
+void				garbage_collector(t_myvar *var, void (*del)(void *));
+void				add_to_listt(char **ss, t_listt **node);
 int					simple_check(int i, int j, char **s, int check);
 int					last_ind(char *str);
 int					first_ind(char *str);
-int					ft_listsize(list *lst);
-void				list_fill(list **list, listt **node);
-void				store_line(char **line, myvar *var, char **s);
-void				fill_listt(list **listo, listt **liste);
-void				add_node_list(char *name, list **listo, int *countt,
-						myvar *var);
+int					ft_listsize(t_liist *lst);
+void				list_fill(t_liist **list, t_listt **node);
+void				store_line(char **line, t_myvar *var, char **s);
+void				fill_listt(t_liist **listo, t_listt **liste);
+void				add_node_list(char *name, t_liist **listo, int *countt,
+						t_myvar *var);
 int					check_xy(int x, int y, char **s);
-void store_to_error(char **s , char *error);
-int	check_map2(char **s , myvar *var);
-int					check_floor(char *s, list **listo, myvar *var);
-void				check_texture_floor(char *c, char *s, myvar *var,
-						list **listt);
-int					process_s(char **s, char **ss, listt **node);
+void				store_to_error(char **s, char *error);
+int					check_map2(char **s, t_myvar *var);
+int					check_floor(char *s, t_liist **listo, t_myvar *var);
+void				check_texture_floor(char *c, char *s, t_myvar *var,
+						t_liist **listt);
+int					process_s(char **s, char **ss, t_listt **node);
 int					count(char **s);
-int					check_texture(char *s, list **list, myvar *var);
-int					check_ss(char *line, listt **node);
-void				add_nodee(char *name, list **listo, listt **liste);
-int					check_s(char **s, list **list, myvar *var);
-int					process_s(char **s, char **ss, listt **node);
-void				detect_direc_player(myvar *var);
+int					check_texture(char *s, t_liist **list, t_myvar *var);
+int					check_ss(char *line, t_listt **node);
+void				add_nodee(char *name, t_liist **listo, t_listt **liste);
+int					check_s(char **s, t_liist **list, t_myvar *var);
+void				detect_direc_player(t_myvar *var);
 void				parse_s(char **s, int count);
 int					check_extension(char *str, char *s);
-void				execute(myvar *var);
-void				calcul_map_dimens(myvar *var);
+void				execute(t_myvar *var);
+void				calcul_map_dimens(t_myvar *var);
 void				my_mlx_pixel_put(t_data *data, int x, int y, int color);
-void				store_to_textures(myvar *var, char *s);
+void				store_to_textures(t_myvar *var, char *s);
 int					create_rgb(int r, int g, int b);
-void				ft_draw_mini_map(myvar *var);
-void				setup_mouse(myvar *var);
-int					handle_mouse(myvar *var);
+void				ft_draw_mini_map(t_myvar *var);
+void				setup_mouse(t_myvar *var);
+int					handle_mouse(t_myvar *var);
 void				destroy(t_data *data);
-int					get_texture_color(myvar *var, int type_wall, int x, int y);
-void				load_textures_hands(void *mlx, myvar *var);
-void				load_textures(void *mlx, myvar *var);
-void				draw_hands(t_data *data, myvar *var);
-int					get_texture_hands_color(myvar *var, int x, int y);
-void				destroy_image(myvar *var);
+int					get_texture_color(t_myvar *var, int type_wall,
+						int x, int y);
+void				load_textures_hands(void *mlx, t_myvar *var);
+void				load_textures(void *mlx, t_myvar *var);
+void				draw_hands(t_data *data, t_myvar *var);
+int					get_texture_hands_color(t_myvar *var, int x, int y);
+void				destroy_image(t_myvar *var);
 double				get_time(void);
-int					key_press(int keycode, myvar *var);
+int					key_press(int keycode, t_myvar *var);
 int					key_release(int keycode, t_data *data);
 int					key_down(t_data *data, int keycode);
-void				read_keys(myvar *var);
-int					is_valid_position(myvar *var, double x, double y);
-int					close_window(myvar *data);
-int					raycasting_loop(myvar *var);
+void				read_keys(t_myvar *var);
+int					is_valid_position(t_myvar *var, double x, double y);
+int					close_window(t_myvar *data);
+int					raycasting_loop(t_myvar *var);
 void				init_ray(t_data *data, int x, t_ray *ray);
 void				calcul_wall_dist(t_data *data, t_ray *ray, double ray_dir_x,
 						double ray_dir_y);
 void				calculate_dist(t_data *data, t_ray *ray, double ray_dir_x,
 						double ray_dir_y);
-void				dda_algo(t_ray *ray, myvar *var);
-int					is_wall(myvar *var, int x, int y);
-void				draw_v_line(t_data *data, int x, t_ray *ray, myvar *var);
+void				dda_algo(t_ray *ray, t_myvar *var);
+int					is_wall(t_myvar *var, int x, int y);
+void				draw_v_line(t_data *data, int x, t_ray *ray, t_myvar *var);
 void				calculate_step_direction(double ray_dir_x, double ray_dir_y,
 						int *step_x, int *step_y);
 void				update_frame_data(t_data *data);
-void				update_display(t_data *data, myvar *var);
+void				update_display(t_data *data, t_myvar *var);
 void				init_ray_calc(t_ray_calc *calc, t_data *data);
-void				draw_filled_fov(myvar *var, double center_pos[2]);
+void				draw_filled_fov(t_myvar *var, double center_pos[2]);
 int					get_map_color(char tile);
-void				my_mlx_pixel_put_transparent(t_data *data, int x, int y, float alpha);
+void				my_mlx_pixel_put_transparent(t_data *data, int x, int y,
+						float alpha);
 #endif

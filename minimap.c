@@ -6,7 +6,7 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 22:48:10 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/16 21:38:11 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/16 22:15:21 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	my_mlx_pixel_put_transparent(t_data *data, int x, int y, float alpha)
 {
 	unsigned int (*dst), (src_rgb), (dst_rgb), (r), (g), (b);
-	if (x >= 0 && x < screen_width && y >= 0 && y < screen_height)
+	if (x >= 0 && x < SCREEN_WIDTH && y >= 0 && y < SCREEN_HEIGHT)
 	{
 		dst = (unsigned int *)(data->addr + (y * data->line_length + x
 					* (data->bits_per_pixel / 8)));
@@ -45,7 +45,7 @@ void	draw_mini_square(t_data *data, double x, double y)
 		j = 0;
 		while (j < TILE_SIZE)
 		{
-			if (rounded_x + i < screen_width && rounded_y + j < screen_height
+			if (rounded_x + i < SCREEN_WIDTH && rounded_y + j < SCREEN_HEIGHT
 				&& rounded_x + i >= 0 && rounded_y + j >= 0)
 				my_mlx_pixel_put_transparent(data, rounded_x + i, rounded_y + j,
 					0.65f);
@@ -73,7 +73,7 @@ void	draw_mini_player(t_data *data, double x, double y)
 		j = -1;
 		while (++j < player_size)
 		{
-			if (rounded_x + i < screen_width && rounded_y + j < screen_height
+			if (rounded_x + i < SCREEN_WIDTH && rounded_y + j < SCREEN_HEIGHT
 				&& rounded_x + i >= 0 && rounded_y + j >= 0)
 				my_mlx_pixel_put_transparent(data, rounded_x + i, rounded_y + j,
 					0.9f);
@@ -81,7 +81,7 @@ void	draw_mini_player(t_data *data, double x, double y)
 	}
 }
 
-void	draw_map_row(myvar *var, int y)
+void	draw_map_row(t_myvar *var, int y)
 {
 	double	screen_pos[2];
 
@@ -110,7 +110,7 @@ void	draw_map_row(myvar *var, int y)
 	}
 }
 
-void	ft_draw_mini_map(myvar *var)
+void	ft_draw_mini_map(t_myvar *var)
 {
 	double	center_pos[2];
 	int		y;

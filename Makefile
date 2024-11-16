@@ -14,7 +14,7 @@ all: $(NAME)
 
 $(NAME): $(OBJ)
 	make -C libft
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJ) libft/libft.a -Lmlx_linux ./mlx_linux/libmlx.a -lXext -lX11 -lm -lz
+	$(CC) $(CFLAGS) -Lmlx_linux -o $(NAME) $(OBJ) libft/libft.a ./mlx_linux/libmlx.a -lXext -lX11 -lm -lz
 
 clean:
 	rm -rf $(OBJ)

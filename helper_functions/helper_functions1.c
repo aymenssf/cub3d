@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   helper_functions1.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yaboulan <yaboulan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 04:50:01 by yaboulan          #+#    #+#             */
-/*   Updated: 2024/11/16 16:25:16 by yaboulan         ###   ########.fr       */
+/*   Updated: 2024/11/16 22:25:43 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub3d.h"
 
-void	check_s2(char c, int *check, myvar *var)
+void	check_s2(char c, int *check, t_myvar *var)
 {
 	if (c == '\n')
 		(*check)++;
@@ -28,7 +28,7 @@ void	check_s2(char c, int *check, myvar *var)
 		*check = 0;
 }
 
-char	**map_to_s(char *s, int count, myvar *var)
+char	**map_to_s(char *s, int count, t_myvar *var)
 {
 	int		check;
 	int		i;
@@ -40,7 +40,7 @@ char	**map_to_s(char *s, int count, myvar *var)
 	while (s[++i])
 		check_s2(s[i], &check, var);
 	str = ft_split(s, '\n');
-	if(!str)
+	if (!str)
 	{
 		printf("Error Missed CUB \n");
 		garbage_collector(var, free);
@@ -51,14 +51,14 @@ char	**map_to_s(char *s, int count, myvar *var)
 	return (str);
 }
 
-void	mylist(void *node, listt **nodee)
+void	mylist(void *node, t_listt **nodee)
 {
-	listt	*nod;
-	listt	*head;
+	t_listt	*nod;
+	t_listt	*head;
 
 	if (!node || !nodee)
 		return ;
-	nod = malloc(sizeof(listt));
+	nod = malloc(sizeof(t_listt));
 	if (!nod)
 		return ;
 	nod->node = node;
@@ -74,10 +74,10 @@ void	mylist(void *node, listt **nodee)
 	head->next = nod;
 }
 
-void	garbage_collector(myvar *var, void (*del)(void *))
+void	garbage_collector(t_myvar *var, void (*del)(void *))
 {
-	listt	*temp;
-	listt	**lst;
+	t_listt	*temp;
+	t_listt	**lst;
 
 	lst = &var->list;
 	if (!lst)
@@ -92,7 +92,7 @@ void	garbage_collector(myvar *var, void (*del)(void *))
 	free(var->data);
 }
 
-void	add_to_listt(char **ss, listt **node)
+void	add_to_listt(char **ss, t_listt **node)
 {
 	int	i;
 

@@ -6,13 +6,13 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 16:44:07 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/16 22:01:54 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/16 22:15:21 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./cub3d.h"
 
-static void	init_n(myvar *var)
+static void	init_n(t_myvar *var)
 {
 	var->data->dir_x = 0;
 	var->data->dir_y = 1;
@@ -20,7 +20,7 @@ static void	init_n(myvar *var)
 	var->data->plane_y = 0;
 }
 
-static void	init_e(myvar *var)
+static void	init_e(t_myvar *var)
 {
 	var->data->dir_x = 1;
 	var->data->dir_y = 0;
@@ -28,7 +28,7 @@ static void	init_e(myvar *var)
 	var->data->plane_y = 0.66;
 }
 
-static void	init_w(myvar *var)
+static void	init_w(t_myvar *var)
 {
 	var->data->dir_x = -1;
 	var->data->dir_y = 0;
@@ -36,7 +36,7 @@ static void	init_w(myvar *var)
 	var->data->plane_y = -0.66;
 }
 
-static void	set_direc_player(myvar *var, char direc)
+static void	set_direc_player(t_myvar *var, char direc)
 {
 	if (direc == 'S')
 	{
@@ -53,7 +53,7 @@ static void	set_direc_player(myvar *var, char direc)
 		init_w(var);
 }
 
-void	detect_direc_player(myvar *var)
+void	detect_direc_player(t_myvar *var)
 {
 	int (i), (j);
 	i = 0;

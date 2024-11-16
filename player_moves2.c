@@ -6,13 +6,13 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 13:07:40 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/15 13:18:20 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/16 22:15:21 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./cub3d.h"
 
-int	key_press(int keycode, myvar *var)
+int	key_press(int keycode, t_myvar *var)
 {
 	if (keycode == KEY_ESC)
 		close_window(var);

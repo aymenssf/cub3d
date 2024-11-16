@@ -6,13 +6,13 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 21:37:50 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/16 21:38:14 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/16 22:15:21 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	cast_fov_ray(myvar *var, double angle, double start_pos[2])
+void	cast_fov_ray(t_myvar *var, double angle, double start_pos[2])
 {
 	double	r;
 	double	coord[2];
@@ -28,7 +28,7 @@ void	cast_fov_ray(myvar *var, double angle, double start_pos[2])
 					/ TILE_SIZE));
 		map_pos[1] = (int)((var->data->pos_y + (coord[1] - start_pos[1])
 					/ TILE_SIZE));
-		if ((int)coord[0] < screen_width && (int)coord[1] < screen_height
+		if ((int)coord[0] < SCREEN_WIDTH && (int)coord[1] < SCREEN_HEIGHT
 			&& (int)coord[0] >= 0 && (int)coord[1] >= 0)
 			my_mlx_pixel_put_transparent(var->data, (int)coord[0],
 				(int)coord[1], 0.1f);
@@ -38,7 +38,7 @@ void	cast_fov_ray(myvar *var, double angle, double start_pos[2])
 	}
 }
 
-void	draw_filled_fov(myvar *var, double center_pos[2])
+void	draw_filled_fov(t_myvar *var, double center_pos[2])
 {
 	double	angle;
 	double	fov;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   quee_functions_helper.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yaboulan <yaboulan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 04:55:03 by yaboulan          #+#    #+#             */
-/*   Updated: 2024/11/16 04:57:09 by yaboulan         ###   ########.fr       */
+/*   Updated: 2024/11/16 22:24:21 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,11 @@ int	create_rgb(int r, int g, int b)
 
 void	store_to_error(char **s, char *error)
 {
-	if(*s[0] == 0)
+	if (*s[0] == 0)
 		*s = error;
 }
 
-int	check_s(char **s, list **list, myvar *var)
+int	check_s(char **s, t_liist **list, t_myvar *var)
 {
 	int		i;
 	char	**k;

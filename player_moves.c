@@ -6,7 +6,7 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 13:05:04 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/16 21:50:32 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/16 22:15:21 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ static void	hdl_l_rot(t_data *data)
 		* cos(data->rot_speed);
 }
 
-void	read_keys(myvar *var)
+void	read_keys(t_myvar *var)
 {
 	t_data	*data;
 	double	new_pos_x;

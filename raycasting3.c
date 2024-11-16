@@ -6,7 +6,7 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 23:08:54 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/15 23:10:16 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/16 22:15:21 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	init_ray(t_data *data, int x, t_ray *ray)
 {
-	ray->camera_x = 2 * x / (double)screen_width - 1;
+	ray->camera_x = 2 * x / (double)SCREEN_WIDTH - 1;
 	data->ray_dir_x = data->dir_x + data->plane_x * ray->camera_x;
 	data->ray_dir_y = data->dir_y + data->plane_y * ray->camera_x;
 	ray->map_x = (int)data->pos_x;
@@ -43,7 +43,7 @@ void	calculate_step_direction(double ray_dir_x, double ray_dir_y,
 		*step_y = 1;
 }
 
-void	calcul_map_dimens(myvar *var)
+void	calcul_map_dimens(t_myvar *var)
 {
 	int	row;
 	int	col;

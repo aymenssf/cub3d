@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   helper_Textures.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yaboulan <yaboulan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 04:53:46 by yaboulan          #+#    #+#             */
-/*   Updated: 2024/11/16 04:54:16 by yaboulan         ###   ########.fr       */
+/*   Updated: 2024/11/16 22:30:05 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub3d.h"
 
-int	check_texture(char *s, list **list, myvar *var)
+int	check_texture(char *s, t_liist **list, t_myvar *var)
 {
 	char	**ss;
 
@@ -29,7 +29,7 @@ int	check_texture(char *s, list **list, myvar *var)
 	return (0);
 }
 
-void	check_texture_floor(char *c, char *s, myvar *var, list **listt)
+void	check_texture_floor(char *c, char *s, t_myvar *var, t_liist **listt)
 {
 	if ((!ft_strncmp(c, "NO", 2)) || (!ft_strncmp(c, "SO", 2)) || !ft_strncmp(c,
 			"WE", 2) || !ft_strncmp(c, "EA", 2))
@@ -51,7 +51,7 @@ int	check_sfloor(char *s)
 	return (0);
 }
 
-int	check_floor(char *s, list **listo, myvar *var)
+int	check_floor(char *s, t_liist **listo, t_myvar *var)
 {
 	char	*sss;
 	int		i;
@@ -79,7 +79,7 @@ int	check_floor(char *s, list **listo, myvar *var)
 	return (0);
 }
 
-int	process_s(char **s, char **ss, listt **node)
+int	process_s(char **s, char **ss, t_listt **node)
 {
 	*s = ft_strtrim(*s, " ");
 	mylist(*s, node);

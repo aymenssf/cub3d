@@ -6,13 +6,13 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 13:13:07 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/16 21:15:44 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/16 22:15:21 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./cub3d.h"
 
-int	is_wall(myvar *var, int x, int y)
+int	is_wall(t_myvar *var, int x, int y)
 {
 	if (x < 0 || x >= var->data->map_cols || y < 0 || y >= var->data->map_rows
 		|| (size_t)y >= ft_strlen(var->s[y]))
@@ -40,7 +40,7 @@ void	destroy(t_data *data)
 	exit(0);
 }
 
-void	destroy_image(myvar *var)
+void	destroy_image(t_myvar *var)
 {
 	int	i;
 
@@ -50,15 +50,15 @@ void	destroy_image(myvar *var)
 	mlx_destroy_image(var->data->mlx, var->texture_hands.img);
 }
 
-int	close_window(myvar *data)
+int	close_window(t_myvar *data)
 {
-	   mlx_clear_window(data->data->mlx, data->data->win);
-    destroy_image(data);
-    mlx_destroy_image(data->data->mlx, data->data->img);
-    mlx_destroy_window(data->data->mlx, data->data->win);
-    mlx_destroy_display(data->data->mlx);
-    free(data->data->mlx);
-    garbage_collector(data, free);
+	mlx_clear_window(data->data->mlx, data->data->win);
+	destroy_image(data);
+	mlx_destroy_image(data->data->mlx, data->data->img);
+	mlx_destroy_window(data->data->mlx, data->data->win);
+	mlx_destroy_display(data->data->mlx);
+	free(data->data->mlx);
+	garbage_collector(data, free);
 	exit(0);
 	return (0);
 }

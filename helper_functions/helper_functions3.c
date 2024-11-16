@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   helper_functions3.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yaboulan <yaboulan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 04:53:31 by yaboulan          #+#    #+#             */
-/*   Updated: 2024/11/16 04:53:32 by yaboulan         ###   ########.fr       */
+/*   Updated: 2024/11/16 22:26:05 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	first_ind(char *str)
 	return (i);
 }
 
-int	ft_listsize(list *lst)
+int	ft_listsize(t_liist *lst)
 {
 	int	i;
 
@@ -45,16 +45,16 @@ int	ft_listsize(list *lst)
 	return (i);
 }
 
-void	list_fill(list **listtt, listt **node)
+void	list_fill(t_liist **listtt, t_listt **node)
 {
-	*listtt = malloc(sizeof(list));
+	*listtt = malloc(sizeof(t_list));
 	if (!(*listtt))
 		return ;
 	mylist(*listtt, node);
 	fill_listt(listtt, node);
 }
 
-void	fill_listt(list **listo, listt **liste)
+void	fill_listt(t_liist **listo, t_listt **liste)
 {
 	(*listo) = NULL;
 	add_nodee("SO", listo, liste);

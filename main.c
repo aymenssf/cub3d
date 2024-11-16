@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yaboulan <yaboulan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 04:45:26 by yaboulan          #+#    #+#             */
-/*   Updated: 2024/11/16 04:48:01 by yaboulan         ###   ########.fr       */
+/*   Updated: 2024/11/16 22:24:21 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int	duplicate(myvar *var, list *listt)
+int	duplicate(t_myvar *var, t_liist *listt)
 {
 	while (listt)
 	{
@@ -25,9 +25,9 @@ int	duplicate(myvar *var, list *listt)
 	return (0);
 }
 
-int	parse_map(myvar *var)
+int	parse_map(t_myvar *var)
 {
-	list	*listt;
+	t_liist	*listt;
 	char	*line;
 	char	*s;
 	char	**ss;
@@ -67,7 +67,7 @@ int	check_extension(char *str, char *s)
 		return (0);
 }
 
-void	init(myvar *var, int argc, char **argv)
+void	init(t_myvar *var, int argc, char **argv)
 {
 	int	i;
 
@@ -96,7 +96,7 @@ void	init(myvar *var, int argc, char **argv)
 
 int	main(int argc, char **argv)
 {
-	myvar	var;
+	t_myvar	var;
 
 	init(&var, argc, argv);
 	if (!var.fd)
