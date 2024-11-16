@@ -6,7 +6,7 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 16:44:07 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/15 23:15:32 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/16 22:00:23 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,14 +38,14 @@ static void	init_w(myvar *var)
 
 static void	set_direc_player(myvar *var, char direc)
 {
-	if (direc == 'N')
+	if (direc == 'S')
 	{
 		var->data->dir_x = 0;
 		var->data->dir_y = -1;
 		var->data->plane_x = 0.66;
 		var->data->plane_y = 0;
 	}
-	else if (direc == 'S')
+	else if (direc == 'N')
 		init_s(var);
 	else if (direc == 'E')
 		init_e(var);
