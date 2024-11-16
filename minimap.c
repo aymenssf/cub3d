@@ -6,7 +6,7 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 22:48:10 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/15 23:19:26 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/16 19:36:41 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,7 @@
 void	my_mlx_pixel_put_transparent(t_data *data, int x, int y, int color,
 		float alpha)
 {
-	unsigned int	*dst;
-	unsigned int	src_rgb;
-	unsigned int	dst_rgb;
-	unsigned int	r;
-	unsigned int	g;
-	unsigned int	b;
-
+	unsigned int (*dst), (src_rgb), (dst_rgb), (r), (g), (b);
 	if (x >= 0 && x < screen_width && y >= 0 && y < screen_height)
 	{
 		dst = (unsigned int *)(data->addr + (y * data->line_length + x
@@ -66,14 +60,9 @@ void	draw_mini_square(t_data *data, double x, double y, int color)
 
 void	draw_mini_player(t_data *data, double x, double y)
 {
-	int		player_size;
 	float	alpha;
-	int		color;
-	int		rounded_x;
-	int		rounded_y;
-	int		i;
-	int		j;
 
+	int (rounded_x), (rounded_y), (i), (j), (player_size), (color);
 	player_size = 6;
 	alpha = 0.9f;
 	color = 0xFF0000;
@@ -98,18 +87,10 @@ void	draw_mini_player(t_data *data, double x, double y)
 void	draw_filled_fov(myvar *var, double start_x, double start_y,
 		double start_angle, double end_angle, int radius)
 {
-	int		color;
 	float	alpha;
-	double	angle_step;
-	int		map_x;
-	int		map_y;
-	double	x;
-	double	y;
-	int		rounded_x;
-	int		rounded_y;
-	double	angle;
-	double	r;
 
+	int (color), (map_x), (map_y), (rounded_x), (rounded_y);
+	double (angle_step), (x), (y), (angle), (r);
 	color = 0x00FF00;
 	alpha = 0.1f;
 	angle_step = 0.02;
@@ -157,25 +138,11 @@ int	get_map_color(char tile)
 void	ft_draw_mini_map(myvar *var)
 {
 	t_data	*data;
-	double	player_x;
-	double	player_y;
-	double	offset_x;
-	double	offset_y;
-	int		base_x;
-	int		base_y;
-	int		map_x;
-	int		map_y;
-	double	screen_x;
-	double	screen_y;
-	double	center_x;
-	double	center_y;
-	double	fov;
-	double	player_angle;
-	double	start_angle;
-	double	end_angle;
-	int		y;
-	int		x;
 
+	double (player_x), (player_y), (offset_x), (offset_y);
+	int (base_x), (base_y), (map_x), (map_y), (y), (x);
+	double (screen_x), (screen_y), (center_x), (center_y), (fov),
+		(player_angle), (start_angle), (end_angle);
 	data = var->data;
 	player_x = data->pos_x;
 	player_y = data->pos_y;
