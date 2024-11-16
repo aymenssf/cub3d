@@ -6,13 +6,12 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 12:40:14 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/16 21:54:48 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/16 21:58:58 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./cub3d.h"
 
-// Mouse position initialization and boundary handling
 static void	handle_mouse_position(t_data *data)
 {
 	if (data->mouse_x < 50)
@@ -32,7 +31,6 @@ static void	handle_mouse_position(t_data *data)
 	}
 }
 
-// Updates rotation based on mouse movement
 static void	update_view(t_data *data, int hold)
 {
 	double (old_dir_x), (old_plane_x), (rotation_speed);
@@ -54,7 +52,6 @@ static void	update_view(t_data *data, int hold)
 		* cos(rotation_speed);
 }
 
-// Main mouse handling function
 int	handle_mouse(myvar *var)
 {
 	t_data		*data;
