@@ -35,7 +35,7 @@ char	*get_next_line(int fd)
 	return (some(&i, line));
 }
 
-int	find_direction(player *player, char **mini_map)
+int	find_direction(myvar *var ,player *player, char **mini_map)
 {
 	int	i;
 	int	j;
@@ -56,11 +56,11 @@ int	find_direction(player *player, char **mini_map)
 			}
 			else if (mini_map[i][j] != ' ' && mini_map[i][j] != '0'
 					&& mini_map[i][j] != '1')
-				return (1);
+				return (store_to_error(&var->error,"Wrong caracter"),1);
 		}
 	}
 	if (flag != 1)
-		return (1);
+		return (store_to_error(&var->error,"On Player"),1);
 	return (0);
 }
 

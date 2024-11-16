@@ -139,6 +139,7 @@ typedef struct myvar
 	player			player;
 	int				floor;
 	int				cel;
+	char			*error;
 	char			*textures[4];
 	t_texture		texturess[4];
 	t_texture		texture_hands;
@@ -178,7 +179,7 @@ typedef struct s_ray
 }					t_ray;
 
 char				*get_next_line(int fd);
-int					find_direction(player *player, char **mini_map);
+int	find_direction(myvar *var ,player *player, char **mini_map);
 char				**map_to_s(char *s, int count, myvar *var);
 void				mylist(void *node, listt **nodee);
 void				garbage_collector(myvar *var, void (*del)(void *));
@@ -193,7 +194,8 @@ void				fill_listt(list **listo, listt **liste);
 void				add_node_list(char *name, list **listo, int *countt,
 						myvar *var);
 int					check_xy(int x, int y, char **s);
-int					check_map2(char **s);
+void store_to_error(char **s , char *error);
+int	check_map2(char **s , myvar *var);
 int					check_floor(char *s, list **listo, myvar *var);
 void				check_texture_floor(char *c, char *s, myvar *var,
 						list **listt);

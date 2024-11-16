@@ -30,7 +30,7 @@ char	**map_to_s(char *s, int count, myvar *var)
 	str = ft_split(s, '\n');
 	if(str == NULL)
 	{
-		printf("error");
+		printf("Error Missed CUB \n");
 		garbage_collector(var, free);
 		exit(1);
 	}

@@ -68,7 +68,7 @@ void	add_node_list(char *name, list **listo, int *countt, myvar *var)
 		}
 		head = head->next;
 	}
-	printf("error");
+	printf("Error Missed key or Value of Textures || FC\n");
 	garbage_collector(var, free);
 	exit(1);
 }

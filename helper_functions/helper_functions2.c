@@ -36,7 +36,7 @@ int	check_len(char **s)
 	return (i);
 }
 
-int	check_map2(char **s)
+int	check_map2(char **s , myvar *var)
 {
 	int	i;
 	int	j;
@@ -52,7 +52,7 @@ int	check_map2(char **s)
 		while (s[i][++j])
 		{
 			if (simple_check(i, j, s, check))
-				return (1);
+				return (store_to_error(&var->error,"Look At your Map Invalid Format"),1);
 		}
 		if (i == check)
 			return (0);

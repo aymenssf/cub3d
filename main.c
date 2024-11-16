@@ -1,11 +1,14 @@
 #include "cub3d.h"
 
-int	duplicate(list *listt)
+int	duplicate(myvar *var , list *listt)
 {
 	while (listt)
 	{
-		if ((listt)->value == 0 || (listt)->value > 1)
-			return (1);
+		if ((listt)->value == 0 )
+			return (store_to_error(&var->error,"missed Value"),1);
+		else if ((listt)->value > 1)
+			return (store_to_error(&var->error,"Duplicated Value"),1);
+
 		(listt) = (listt)->next;
 	}
 	return (0);
@@ -23,14 +26,14 @@ int	parse_map(myvar *var)
 	mylist(s, &(var->list));
 	line = get_next_line(var->fd);
 	if (!line)
-		return (1);
+		return (store_to_error(&var->error,"empty file"),1);
 	while ((line))
 		store_line(&line, var, &s);
 	var->str = s;
 	ss = ft_split(s, '\n');
 	mylist(ss, &(var->list));
 	add_to_listt(ss, &(var->list));
-	if (check_s(ss, &listt, var) || duplicate(listt) || var->count != 6)
+	if (check_s(ss, &listt, var) || duplicate(var,listt) || var->count != 6)
 		return (1);
 	var->s = map_to_s(var->str, var->count, var);
 
@@ -68,6 +71,7 @@ void	init(myvar *var, int argc, char **argv)
 	var->cel = 0;
 	var->floor = 0;
 	var->fd = 0;
+	var->error = "";
 	var->list = NULL;
 	var->str = NULL;
 	var->count = 0;
@@ -88,14 +92,13 @@ int	main(int argc, char **argv)
 
 	if (!var.fd)
 	{
+			printf("Error  Missed Correct File \n");
 		return (garbage_collector(&var, free), 1);
-
-		return (printf("error"), 1);
 	}
-	if (parse_map(&var) || find_direction(&var.player, var.s)
-		|| check_map2(var.s))
+	if (parse_map(&var) || find_direction(&var,&var.player, var.s)
+		|| check_map2(var.s,&var))
 	{
-		printf("error ");
+		printf("Error %s \n",var.error);
 		return (garbage_collector(&var, free), 1);
 	}
 	else

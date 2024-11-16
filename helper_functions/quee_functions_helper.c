@@ -4,6 +4,13 @@ int create_rgb(int r , int g , int b)
 {
 	return (r << 16 | g << 8 | b );
 }
+
+void store_to_error(char **s , char *error)
+{
+	if(*s[0] == 0)
+		*s = error;
+}
+
 int	check_s(char **s, list **list, myvar *var)
 {
 	int		i;
