@@ -81,30 +81,40 @@ void	draw_floor_ceiling(t_data *data, int x, t_ray *ray, myvar *var)
 	}
 }
 
-void	draw_wall_texture(t_data *data, int x, t_ray *ray, myvar *var)
+void draw_wall_texture(t_data *data, int x, t_ray *ray, myvar *var)
 {
-	double	wall_x;
-	int		tex_x;
-	int		tex_y;
-	int		y;
-	int		color;
-
-	if (ray->side == 0)
-		wall_x = data->pos_y + ray->perp_wall_dist * data->ray_dir_y;
-	else
-		wall_x = data->pos_x + ray->perp_wall_dist * data->ray_dir_x;
-	wall_x -= floor(wall_x);
-	tex_x = (int)(wall_x * var->texturess[ray->wall_orientation].width);
-	y = ray->draw_start;
-	while (y < ray->draw_end)
-	{
-		tex_y = ((y - ray->draw_start)
-				* var->texturess[ray->wall_orientation].height)
-			/ ray->line_height;
-		color = get_texture_color(var, ray->wall_orientation, tex_x, tex_y);
-		my_mlx_pixel_put(data, x, y, color);
-		y++;
-	}
+    double wall_x;
+    int tex_x;
+    int tex_y;
+    int y;
+    int color;
+    
+    if (ray->side == 0)
+        wall_x = data->pos_y + ray->perp_wall_dist * data->ray_dir_y;
+    else
+        wall_x = data->pos_x + ray->perp_wall_dist * data->ray_dir_x;
+    wall_x -= floor(wall_x);
+    
+    tex_x = (int)(wall_x * var->texturess[ray->wall_orientation].width);
+    if (ray->side == 0 && data->ray_dir_x > 0)
+        tex_x = var->texturess[ray->wall_orientation].width - tex_x - 1;
+    if (ray->side == 1 && data->ray_dir_y < 0)
+        tex_x = var->texturess[ray->wall_orientation].width - tex_x - 1;
+    
+    double step = 1.0 * var->texturess[ray->wall_orientation].height / ray->line_height;
+    double tex_pos = (ray->draw_start - screen_height / 2 + ray->line_height / 2) * step;
+    
+    y = ray->draw_start;
+    while (y < ray->draw_end)
+    {
+        tex_y = (int)tex_pos & (var->texturess[ray->wall_orientation].height - 1);
+        tex_pos += step;
+        
+        color = get_texture_color(var, ray->wall_orientation, tex_x, tex_y);
+            
+        my_mlx_pixel_put(data, x, y, color);
+        y++;
+    }
 }
 
 void	draw_v_line(t_data *data, int x, t_ray *ray, myvar *var)
