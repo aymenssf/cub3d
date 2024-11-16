@@ -6,21 +6,62 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 12:40:14 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/15 23:21:20 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/16 21:54:48 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./cub3d.h"
 
+// Mouse position initialization and boundary handling
+static void	handle_mouse_position(t_data *data)
+{
+	if (data->mouse_x < 50)
+	{
+		data->mouse_x = 50;
+		mlx_mouse_move(data->mlx, data->win, data->mouse_x, data->mouse_y);
+	}
+	else if (data->mouse_x > screen_width - 50)
+	{
+		data->mouse_x = screen_width - 50;
+		mlx_mouse_move(data->mlx, data->win, data->mouse_x, data->mouse_y);
+	}
+	if (data->mouse_x < 50 || data->mouse_x > screen_width - 50)
+	{
+		mlx_mouse_move(data->mlx, data->win, screen_width / 2, data->mouse_y);
+		data->mouse_x = screen_width / 2;
+	}
+}
+
+// Updates rotation based on mouse movement
+static void	update_view(t_data *data, int hold)
+{
+	double (old_dir_x), (old_plane_x), (rotation_speed);
+	if (hold == 0 || !(data->mouse_x > 0 && data->mouse_x < screen_width
+			&& data->mouse_y > 0 && data->mouse_y < screen_height))
+		return ;
+	rotation_speed = (double)(abs(hold))*0.002;
+	if (hold < 0)
+		rotation_speed = -rotation_speed;
+	old_dir_x = data->dir_x;
+	data->dir_x = data->dir_x * cos(rotation_speed) - data->dir_y
+		* sin(rotation_speed);
+	data->dir_y = old_dir_x * sin(rotation_speed) + data->dir_y
+		* cos(rotation_speed);
+	old_plane_x = data->plane_x;
+	data->plane_x = data->plane_x * cos(rotation_speed) - data->plane_y
+		* sin(rotation_speed);
+	data->plane_y = old_plane_x * sin(rotation_speed) + data->plane_y
+		* cos(rotation_speed);
+}
+
+// Main mouse handling function
 int	handle_mouse(myvar *var)
 {
 	t_data		*data;
 	static int	first_time = 1;
 	static int	prev_x = -1;
 	int			hold;
-	double		rotation_speed;
 
-	double (old_dir_x), (old_plane_x);
 	if (!var || !var->data || !var->data->mlx || !var->data->win)
 		return (garbage_collector(var, free), 1);
 	data = var->data;
@@ -38,41 +79,7 @@ int	handle_mouse(myvar *var)
 			&data->mouse_y) == -1)
 		return (1);
 	hold = data->mouse_x - prev_x;
-	if (data->mouse_x < 50)
-	{
-		data->mouse_x = 50;
-		mlx_mouse_move(data->mlx, data->win, data->mouse_x, data->mouse_y);
-	}
-	else if (data->mouse_x > screen_width - 50)
-	{
-		data->mouse_x = screen_width - 50;
-		mlx_mouse_move(data->mlx, data->win, data->mouse_x, data->mouse_y);
-	}
-	if (data->mouse_x > 0 && data->mouse_x < screen_width && data->mouse_y > 0
-		&& data->mouse_y < screen_height)
-	{
-		if (hold != 0)
-		{
-			rotation_speed = (double)(abs(hold)) *0.002;
-			if (hold < 0)
-				rotation_speed = -rotation_speed;
-			old_dir_x = data->dir_x;
-			data->dir_x = data->dir_x * cos(rotation_speed) - data->dir_y
-				* sin(rotation_speed);
-			data->dir_y = old_dir_x * sin(rotation_speed) + data->dir_y
-				* cos(rotation_speed);
-			old_plane_x = data->plane_x;
-			data->plane_x = data->plane_x * cos(rotation_speed) - data->plane_y
-				* sin(rotation_speed);
-			data->plane_y = old_plane_x * sin(rotation_speed) + data->plane_y
-				* cos(rotation_speed);
-		}
-		if (data->mouse_x < 50 || data->mouse_x > screen_width - 50)
-		{
-			mlx_mouse_move(data->mlx, data->win, screen_width / 2,
-				data->mouse_y);
-			data->mouse_x = screen_width / 2;
-		}
-	}
+	handle_mouse_position(data);
+	update_view(data, hold);
 	return (0);
 }
