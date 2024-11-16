@@ -6,7 +6,7 @@
 /*   By: yaboulan <yaboulan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 04:50:01 by yaboulan          #+#    #+#             */
-/*   Updated: 2024/11/16 04:53:11 by yaboulan         ###   ########.fr       */
+/*   Updated: 2024/11/16 16:25:16 by yaboulan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	check_s2(char c, int *check, myvar *var)
 		return ;
 	else if (((c != '\n' && c != ' ') && *check > 1))
 	{
-		printf("error");
+		printf("Error On Formula Of Textures \n");
 		garbage_collector(var, free);
 		exit(1);
 	}
