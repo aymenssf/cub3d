@@ -6,7 +6,7 @@
 /*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 04:53:42 by yaboulan          #+#    #+#             */
-/*   Updated: 2024/11/16 22:24:21 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/17 23:34:20 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,8 @@ int	simple_check(int i, int j, char **s, int check)
 		if ((s[i][j] != '1' && s[i][j] != ' ') || check == -1)
 			return (1);
 	}
-	else if (s[i][j] == '0')
+	else if (s[i][j] == '0' || s[i][j] == 'N' || s[i][j] == 'S'
+		|| s[i][j] == 'W' || s[i][j] == 'E')
 	{
 		if (!(s[i][j + 1]) || s[i][j + 1] == ' ')
 			return (1);

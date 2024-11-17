@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycasting2.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yaboulan <yaboulan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 16:58:26 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/17 13:26:03 by yaboulan         ###   ########.fr       */
+/*   Updated: 2024/11/17 23:31:33 by aassaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,8 +98,7 @@ void	draw_wall_texture(t_data *data, int x, t_ray *ray, t_myvar *var)
 	y = ray->draw_start;
 	while (y < ray->draw_end)
 	{
-		tex_y = (int)tex_pos & (var->texturess[ray->wall_orientation].height
-				- 1);
+		tex_y = (int)tex_pos % (var->texturess[ray->wall_orientation].height);
 		tex_pos += step;
 		color = get_texture_color(var, ray->wall_orientation, tex_x, tex_y);
 		my_mlx_pixel_put(data, x, y, color);

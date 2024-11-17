@@ -16,7 +16,7 @@ static void	hdl_up_down(t_data *data, double *new_pos_x, double *new_pos_y)
 {
 	double	move_step;
 
-	move_step = data->move_speed * 2;
+	move_step = data->move_speed * 1;
 	if (key_down(data, KEY_UP) || key_down(data, KEY_W))
 	{
 		*new_pos_x += data->dir_x * move_step;
