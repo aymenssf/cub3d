@@ -98,8 +98,7 @@ void	draw_wall_texture(t_data *data, int x, t_ray *ray, t_myvar *var)
 	y = ray->draw_start;
 	while (y < ray->draw_end)
 	{
-		tex_y = (int)tex_pos & (var->texturess[ray->wall_orientation].height
-				- 1);
+		tex_y = (int)tex_pos % (var->texturess[ray->wall_orientation].height);
 		tex_pos += step;
 		color = get_texture_color(var, ray->wall_orientation, tex_x, tex_y);
 		my_mlx_pixel_put(data, x, y, color);

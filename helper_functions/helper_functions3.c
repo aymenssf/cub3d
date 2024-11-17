@@ -47,7 +47,7 @@ int	ft_listsize(t_liist *lst)
 
 void	list_fill(t_liist **listtt, t_listt **node)
 {
-	*listtt = malloc(sizeof(t_list));
+	*listtt = malloc(sizeof(t_liist));
 	if (!(*listtt))
 		return ;
 	mylist(*listtt, node);
