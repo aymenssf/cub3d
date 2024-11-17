@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   quee_functions_helper.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yaboulan <yaboulan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 04:55:03 by yaboulan          #+#    #+#             */
-/*   Updated: 2024/11/16 22:24:21 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/17 13:31:59 by yaboulan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,9 @@ int	check_s(char **s, t_liist **list, t_myvar *var)
 	int		i;
 	char	**k;
 
-	i = -1;
-	while (s[++i] && (k = ft_split(s[i], ' ')))
+	i = 0;
+	k = ft_split(s[i], ' ');
+	while (s[i] && k)
 	{
 		add_to_listt(k, &var->list);
 		mylist(k, &var->list);
@@ -41,6 +42,8 @@ int	check_s(char **s, t_liist **list, t_myvar *var)
 		}
 		if (var->count == 6)
 			break ;
+		i++;
+		k = ft_split(s[i], ' ');
 	}
 	return (0);
 }

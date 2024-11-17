@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycasting2.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aassaf <aassaf@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yaboulan <yaboulan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 16:58:26 by aassaf            #+#    #+#             */
-/*   Updated: 2024/11/16 22:15:21 by aassaf           ###   ########.fr       */
+/*   Updated: 2024/11/17 13:26:03 by yaboulan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,10 +91,6 @@ void	draw_wall_texture(t_data *data, int x, t_ray *ray, t_myvar *var)
 		wall_x = data->pos_x + ray->perp_wall_dist * data->ray_dir_x;
 	wall_x -= floor(wall_x);
 	tex_x = (int)(wall_x * var->texturess[ray->wall_orientation].width);
-	if (ray->side == 0 && data->ray_dir_x > 0)
-		tex_x = var->texturess[ray->wall_orientation].width - tex_x - 1;
-	if (ray->side == 1 && data->ray_dir_y < 0)
-		tex_x = var->texturess[ray->wall_orientation].width - tex_x - 1;
 	step = 1.0 * var->texturess[ray->wall_orientation].height
 		/ ray->line_height;
 	tex_pos = (ray->draw_start - SCREEN_HEIGHT / 2 + ray->line_height / 2)
