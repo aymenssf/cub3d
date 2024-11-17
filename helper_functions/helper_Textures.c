@@ -64,7 +64,7 @@ int	check_floor(char *s, t_liist **listo, t_myvar *var)
 	add_to_listt(ss, &(var->list));
 	mylist(ss, &(var->list));
 	if (count(ss) != 3 || s[ft_strlen(s) - 1] == ',' || (check_sfloor(s)))
-		return (store_to_error(var, &var->error, "Error On Syntax of Floor"), 1);
+		return (store_to_error(var, &var->error, " On Syntax of Floor"), 1);
 	while (ss[++i])
 	{
 		if (check_ss(ss[i], &(var->list)) || ft_atoi(ss[i]) < 0
