@@ -192,7 +192,7 @@ void				fill_listt(t_liist **listo, t_listt **liste);
 void				add_node_list(char *name, t_liist **listo, int *countt,
 						t_myvar *var);
 int					check_xy(int x, int y, char **s);
-void				store_to_error(char **s, char *error);
+void				store_to_error(t_myvar *var, char **s, char *error);
 int					check_map2(char **s, t_myvar *var);
 int					check_floor(char *s, t_liist **listo, t_myvar *var);
 void				check_texture_floor(char *c, char *s, t_myvar *var,

@@ -64,7 +64,7 @@ int	check_map2(char **s, t_myvar *var)
 		while (s[i][++j])
 		{
 			if (simple_check(i, j, s, check))
-				return (store_to_error(&var->error,
+				return (store_to_error(var, &var->error,
 						"Look At your Map Invalid Format"), 1);
 		}
 		if (i == check)

@@ -17,10 +17,13 @@ int	create_rgb(int r, int g, int b)
 	return (r << 16 | g << 8 | b);
 }
 
-void	store_to_error(char **s, char *error)
+void	store_to_error(t_myvar *var,char **s, char *error)
 {
 	if (*s[0] == 0)
 		*s = error;
+	printf("Error %s\n",error);
+	garbage_collector(var,free);
+	exit(1);
 }
 
 int	check_s(char **s, t_liist **list, t_myvar *var)

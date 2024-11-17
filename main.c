@@ -17,9 +17,9 @@ int	duplicate(t_myvar *var, t_liist *listt)
 	while (listt)
 	{
 		if ((listt)->value == 0)
-			return (store_to_error(&var->error, "missed Value"), 1);
+			return (store_to_error(var, &var->error, "missed Value"), 1);
 		else if ((listt)->value > 1)
-			return (store_to_error(&var->error, "Duplicated Value"), 1);
+			return (store_to_error(var, &var->error, "Duplicated Value"), 1);
 		(listt) = (listt)->next;
 	}
 	return (0);
@@ -37,7 +37,7 @@ int	parse_map(t_myvar *var)
 	mylist(s, &(var->list));
 	line = get_next_line(var->fd);
 	if (!line)
-		return (store_to_error(&var->error, "empty file"), 1);
+		return (store_to_error(var, &var->error, "empty file"), 1);
 	while ((line))
 		store_line(&line, var, &s);
 	var->str = s;
